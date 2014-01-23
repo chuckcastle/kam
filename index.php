@@ -80,7 +80,7 @@
 												<i class="icon icon-cloud"></i>
 											</div>
 											<div class="feature-box-info">
-												<h4 class="shorter"><?php if($access<4){ echo '<a href="/docs">';} ?>Document Cloud<?php if($access<4){ echo '</a>';} ?></h4>
+												<h4 class="shorter"><?php if($access!=5){ echo '<a href="/docs">';} ?>Document Cloud<?php if($access!=5){ echo '</a>';} ?></h4>
 												<p class="tall">Access all Auction related documents, including the donation letter and form.</p>
 											</div>
 										</div>
