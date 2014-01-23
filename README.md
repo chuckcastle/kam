@@ -1,0 +1,1 @@
+Krieger Auction Manager
