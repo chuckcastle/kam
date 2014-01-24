@@ -51,7 +51,7 @@
                                                 <i class="icon icon-bar-chart"></i>
                                             </div>
                                             <div class="feature-box-info">
-                                                <h4 class="shorter"><?php if($access<4){ echo '<a href="manage.php?tab=mine">';} ?>Tracking<?php if($access<4){ echo '</a>';} ?></h4>
+                                                <h4 class="shorter"><?php if($access!=5){ echo '<a href="manage.php?tab=mine">';} ?>Tracking<?php if($access!=5){ echo '</a>';} ?></h4>
                                                 <p class="tall">Keep track of businesses that you've contacted about making a donation to our 2014 Spring Auction.</p>
                                             </div>
                                         </div>
@@ -71,7 +71,7 @@
                                                 <i class="icon icon-flag-checkered"></i>
                                             </div>
                                             <div class="feature-box-info">
-                                                <h4 class="shorter"><?php if($access<4){ echo '<a href="reports.php?tab=class">';} ?>Classroom Competition<?php if($access<4){ echo '</a>';} ?></h4>
+                                                <h4 class="shorter"><?php if($access!=5){ echo '<a href="reports.php?tab=class">';} ?>Classroom Competition<?php if($access!=5){ echo '</a>';} ?></h4>
                                                 <p class="tall">See which groups are currently ahead in the Classroom Competition.</p>
                                             </div>
                                         </div>
