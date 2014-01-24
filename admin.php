@@ -101,11 +101,12 @@
     //if submit addcat
     if($_POST['submit']=='Add Category') {
         $title = val($_POST['title']);
-
-        $sql = 'INSERT INTO cat (id, title) VALUES (NULL, "'.$title.'")';
-        $res = mysql_query($sql);
-
-        $_SESSION['msg']['success']='Sweet! Category added!';
+        if($title==''){
+            $_SESSION['msg']['error']='Oh noes!  You didn\'t enter a category title.';
+        } else {
+            $sql = 'INSERT INTO cat (id, title) VALUES (NULL, "'.$title.'")';
+            $res = mysql_query($sql);
+        }
     }
     
     //if submit delete
