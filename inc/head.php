@@ -140,7 +140,7 @@ else if($_POST['submit']=='Register')
 						)");
 
         if($p2rows == 0){
-            if($p2 != $p1){
+            if($p2 != $p1 and $p2 != 0){
                 mysql_query("INSERT INTO msg(text,usr_id,new,dt)
                 VALUES(
                 '".$_POST['fname']." ".$_POST['lname']." registered an account.',
