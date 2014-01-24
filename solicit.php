@@ -120,7 +120,7 @@
     include('inc/header.php');
 ?>
             <div role="main" class="main">
-			
+            
                 <section class="page-top">
                     <div class="container">
                         <div class="row">
@@ -133,7 +133,7 @@
                         </div>
                         <div class="row">
                             <div class="span12">
-                                <h2>Krieger Auction Manager	</h2>
+                                <h2>Krieger Auction Manager    </h2>
                             </div>
                         </div>
                     </div> <!-- /container -->
@@ -144,17 +144,17 @@
                         <?php
                             //donation goal
                             $goal = 40000;
-			
+            
                             //select total amount donation from items table
                             $perqry = 'SELECT SUM(items.value) AS total FROM items';
                             $perres = mysql_query($perqry);
-			
+            
                             while($row = mysql_fetch_array($perres)){
                                 $total = $row['total'];
                                 //percentage of goal
                                 $percent = round(($total/$goal)*100);
                             }
-								
+                                
                             //format as currency
                             $total = number_format($total, 2, '.', ',');
                             $goal = number_format($goal, 2, '.', ',');
@@ -166,7 +166,7 @@
                             </div>
                         </div>
                     </div> <!-- /row center -->
-						
+                        
                     <div class="span12">
                         <?php
                             if($access==5){
@@ -205,7 +205,7 @@
                                 <th>Phone #</th>
                                 <th>Email</th>
                             </thead>
-											
+                                            
                             <tbody>
                                 <?php
                                     while($row = mysql_fetch_array($result)) {
@@ -221,12 +221,12 @@
                                         }
                                         
                                         $orgname = (strlen($row['name']) > 23) ? substr($row['name'],0,20).'...' : $row['name'];
-										echo '<tr>';
-										echo '	<td><i class="icon-'.$icon.'"></i>&nbsp;<a href="orginfo.php?orgid='.$row['id'].'" title="'.$row['name'].'">'.$orgname.'</a></td>';
-                                        echo '	<td>'.$row['poc_name'].'</td>';
-                                        echo '	<td>'.$row['poc_phone'].'</td>';
-                                        echo '	<td>'.$row['poc_email'].'</td>';
-                                        echo '	<td>'.$row['usr'].'</td>';
+                                        echo '<tr>';
+                                        echo '    <td><i class="icon-'.$icon.'"></i>&nbsp;<a href="orginfo.php?orgid='.$row['id'].'" title="'.$row['name'].'">'.$orgname.'</a></td>';
+                                        echo '    <td>'.$row['poc_name'].'</td>';
+                                        echo '    <td>'.$row['poc_phone'].'</td>';
+                                        echo '    <td>'.$row['poc_email'].'</td>';
+                                        echo '    <td>'.$row['usr'].'</td>';
                                         echo '</tr>';
                                     }
                                 

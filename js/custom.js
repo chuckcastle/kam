@@ -4,7 +4,7 @@
 function checkPass() {
     var password = $("#pass").val();
     var confirmPassword = $("#vpass").val();
-
+    
     if (password != confirmPassword)
         $("#lblcheckpass").html("Passwords do not match!");
     else
@@ -12,13 +12,13 @@ function checkPass() {
 }
 
 $(document).ready(function () {
-   $("#vpass").keyup(checkPass);
+    $("#vpass").keyup(checkPass);
 });
 
 
 /* Tablecloth */
 $(document).ready(function() {
-				$("table").tablecloth({
-					sortable: true,
-				});
-			});
+    $("table").tablecloth({
+        sortable: true,
+    });
+});
