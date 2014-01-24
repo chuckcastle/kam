@@ -229,7 +229,7 @@
                                                     echo '<tr>'."\n";
                                                     echo '    <td>'.mb_substr($row['fname'], 0, 1, 'utf-8').'.&nbsp;'.$row['lname'].'</td>'."\n";
                                                     echo '    <td>$'.$row['total'].'</td>'."\n";
-                                                    echo '    <td><a href="" target="_blank">'.$points.'</a></td>'."\n";
+                                                    echo '    <td><a href="https://creator.zoho.com/dkeiller/krieger-points-2013-2014" target="_blank">'.$points.'</a></td>'."\n";
                                                     echo '</tr>'."\n";
                                                 }
                                             ?>

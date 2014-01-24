@@ -160,8 +160,8 @@
                             $goal = number_format($goal, 2, '.', ',');
                         ?>
                         <h2 class="short">We've solicited $<?=$total;?> (<?=$percent;?>%) of our $<?=$goal;?> goal!</h2>
-                        <div class="progress">
-                            <div class="progress bar" data-appear-progress-animation="<?php echo $percent; ?>%" style="width: <?php echo $percent; ?>%;">
+                        <div class="progress progress-striped active">
+                            <div class="bar" data-appear-progress-animation="<?php echo $percent; ?>%" style="width: <?php echo $percent; ?>%;">
                                 <span class="pull-right"><?php echo $percent; ?>%</span>
                             </div>
                         </div>
