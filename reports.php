@@ -2,19 +2,11 @@
 //smoke and mirrors
     include('inc/head.php');
     
-// login/access check
+// login check
     
     //if not logged in
     if(!isset($_SESSION['id'])) {
         $_SESSION['msg']['error']='Uhm... you\'ve gotta be logged in to do that...';
-        
-        header("Location: index.php");
-        exit;
-    }
-    
-    //if access > 3
-    if($_SESSION['acc'] > 3) {
-        $_SESSION['msg']['error']='Sowwy... mommy and daddy don\'t want you to see that :(';
         
         header("Location: index.php");
         exit;
