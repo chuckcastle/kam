@@ -296,9 +296,13 @@
                                 <ul class="dropdown-menu">
                                     <li><a href="reports.php?tab=class">Classroom Leaderboard</a></li>
                                     <li><a href="reports.php?tab=parent">Parent Leaderboard</a></li>
-                                    <li><a href="reports.php?tab=rcv">Items Received</a></li>
-                                    <li><a href="reports.php?tab=yes">Will Donate</a></li>
-                                    <li><a href="reports.php?tab=no">Will Not Donate</a></li>
+                                    <?php
+                                        if($_SESSION['acc'] < 3) {
+                                            echo '<li><a href="reports.php?tab=rcv">Items Received</a></li>';
+                                            echo '<li><a href="reports.php?tab=yes">Will Donate</a></li>';
+                                            echo '<li><a href="reports.php?tab=no">Will Not Donate</a></li>';
+                                        }
+                                    ?>
                                 </ul>
                             </li>
                             <?php

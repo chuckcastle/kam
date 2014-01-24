@@ -262,7 +262,9 @@
                                             </tbody>
                                         </table>
                                     </div> <!-- /tab-pane itemsrcv -->
-                                    
+                                    <?php
+                                        if($access < 3){
+                                    ?>
                                     <div class="tab-pane <?php echo $yestab; ?>" id="donateyes">
                                         <table class="table table-striped">
                                             <thead>
@@ -320,6 +322,9 @@
                                             </tbody>
                                         </table>
                                     </div> <!-- /tab-pane donateno -->
+                                    <?php
+                                        }
+                                    ?>
                                     
                                 </div> <!-- /tab-content -->
                             </div> <!-- /tabs -->
