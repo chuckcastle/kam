@@ -189,7 +189,7 @@
                             <h5>Point of Contact</h5>
                             <p>
                                 <?php
-                                    echo '<strong>'.$org['poc_name'].'</strong><br />';
+                                    echo '<strong>'.$org['poc_name'].'</strong>&nbsp;'.$org['poc_title'].'<br />';
                                     echo '<i class="icon-phone">&nbsp;</i>'.$org['poc_phone'].'<br />';
                                     echo '<i class="icon-envelope">&nbsp;</i>'.$org['poc_email'].'<br />';
                                 ?>    
