@@ -1,10 +1,10 @@
 <?php
 /* Database config */
 
-$db_host		= 'kriegerdb.db.10424383.hostedresource.com';
-$db_user		= 'kriegerdb';
-$db_pass		= 'kr13G3R@@';
-$db_database	= 'kriegerdb'; 
+$db_host        = 'kriegerdb.db.10424383.hostedresource.com';
+$db_user        = 'kriegerdb';
+$db_pass        = 'kr13G3R@@';
+$db_database    = 'kriegerdb'; 
 
 /* End config */
 
@@ -17,26 +17,38 @@ mysql_query("SET names UTF8");
 
 function send_mail($from,$to,$subject,$body)
 {
-	$headers = '';
-	$headers .= "From: $from\n";
-	$headers .= "Reply-to: $from\n";
-	$headers .= "Return-Path: $from\n";
-	$headers .= "Message-ID: <" . md5(uniqid(time())) . "@" . $_SERVER['SERVER_NAME'] . ">\n";
-	$headers .= "MIME-Version: 1.0\n";
-	$headers .= "Content-Type: text/plain; charset=\"iso-8859-1\"\n";
-	$headers .= "Date: " . date('r', time()) . "\n";
+    $headers = '';
+    $headers .= "From: $from\n";
+    $headers .= "Reply-to: $from\n";
+    $headers .= "Return-Path: $from\n";
+    $headers .= "Message-ID: <" . md5(uniqid(time())) . "@" . $_SERVER['SERVER_NAME'] . ">\n";
+    $headers .= "MIME-Version: 1.0\n";
+    $headers .= "Content-Type: text/plain; charset=\"iso-8859-1\"\n";
+    $headers .= "Date: " . date('r', time()) . "\n";
 
-	mail($to,$subject,$body,$headers);
+    mail($to,$subject,$body,$headers);
 }
 
-	//select proper info from msg table
-	$newqry = 'SELECT COUNT(*) AS new, usr_id, members.email FROM msg INNER JOIN members ON usr_id=members.id GROUP BY usr_id';
-	$newres = mysql_query($newqry);
+//email new messages
+    $newqry = 'SELECT COUNT(*) AS new, usr_id, members.email FROM msg INNER JOIN members ON usr_id=members.id WHERE msg.new = "0" GROUP BY usr_id';
+    $newres = mysql_query($newqry);
 
-	while($row = mysql_fetch_array($newres)){
-		send_mail(	'donotreply@chuckcastle.me',
-		$row['email'],
-		'Krieger Auction Manager - You have '.$row['new'].' new notifications this week!',
-		'Hey there!'."\n".'Please log in to your account at the Krieger Auction Management Site and check your messages.'."\n\n".'--'."\n".'Please do not reply to this email.  If you do, a baby unicorn will fall from the sky and land on a baby seal.');
-	}
+    while($msg = mysql_fetch_array($newres)){
+        send_mail(    'donotreply@kriegercenter.org',
+        $msg['email'],
+        'Krieger Auction Manager - You have '.$msg['new'].' new notifications this week!',
+        'Hey there!'."\n".'Please log in to your account at http://auction.kriegercenter.org and check your messages.'."\n\n".'--'."\n".'Please do not reply to this email.  If you do, a baby unicorn will fall from the sky and land on a baby seal.');
+    }
+    
+//email motivation
+    $prtldrqry = 'SELECT members.fname, members.lname, members.email, SUM(items.value) AS total FROM org JOIN members ON org.usr_id = members.id JOIN items ON items.org_id = org.id GROUP BY members.usr ORDER BY total DESC';
+    $prtldrres = mysql_query($prtldrqry);
+    
+    while($ldr = mysql_fetch_array($prtldrres)){
+        send_mail(    'donotreply@kriegercenter.org',
+        $ldr['email'],
+        'Krieger Auction Manager - You\'ve solicited $'.$ldr['total'].'!',
+        'Hey '.$ldr['fname'].','."\n".'Thank you for your awesome work!  Thanks to your efforts, $'.$ldr['total'].' has been solicited for our center!  Rock on, you awesome person you... rock on!'."\n\n".'--'."\n".'Please do not reply to this email.  If you do, baby chipmunks will choke on tasty walnuts.  Please help us save the chipmunks!');
+    }
+    
 ?>

@@ -5,10 +5,15 @@ if(!defined('INCLUDE_CHECK')) die('You are not allowed to execute this file dire
 
 /* Database config */
 
-$db_host		= 'kriegerdb.db.10424383.hostedresource.com';
-$db_user		= 'kriegerdb';
-$db_pass		= 'kr13G3R@@';
-$db_database	= 'kriegerdb'; 
+if($_SERVER['SERVER_NAME']=='localhost'){
+    $db_host    = 'localhost';
+} else {
+    $db_host    = 'kriegerdb.db.10424383.hostedresource.com';
+}
+
+$db_user        = 'kriegerdb';
+$db_pass        = 'kr13G3R@@';
+$db_database    = 'kriegerdb'; 
 
 /* End config */
 

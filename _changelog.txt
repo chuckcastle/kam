@@ -3,6 +3,20 @@ by: Carlos Castillo || .:castle:consulting || chuckcastle.me
 
 Changelog
 =========
+v3.1.0
+-send_mail when item recieved
+-update 'kam.chuckcastle.me' links to 'auction.kriegercenter.org'
+-update 'donotreply@chuckcastle.me' links to 'donotreply@kriegercenter.org'
+-added 'docs' directory
+-added custom 404 to .htaccess
+-login now redirects to solicit.php
+-update index.php text
+-fixed bug where $pass was hashed twice on register
+-items/notes now show First initial. Last name instead of username
+-updated pagination on solicit.php where $targetpage was still set to index.php
+-updated cron script to send motivational emails
+-updated pagination on solicit.php to only count avail = 1
+
 v3.0 (170033JAN14)
 -updated search box placeholder
 -added solicitation text to homepage
