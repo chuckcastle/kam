@@ -6,16 +6,7 @@ require 'inc/connect.php';
 require 'inc/functions.php';
 
 //session config
-session_name('eceLogin');
-session_set_cookie_params(2*7*24*60*60);
 session_start();
-
-
-if($_SESSION['id'] && !isset($_COOKIE['eceRemember']) && !$_SESSION['rememberMe'])
-{
-    $_SESSION = array();
-    session_destroy();
-}
 
 //logoff
 if(isset($_GET['logoff']))
@@ -39,7 +30,6 @@ if($_POST['submit']=='Login')
     {
         $_POST['username'] = mysql_real_escape_string($_POST['username']);
         $_POST['password'] = mysql_real_escape_string($_POST['password']);
-        $_POST['rememberMe'] = (int)$_POST['rememberMe'];
 
         $row = mysql_fetch_assoc(mysql_query("SELECT id,usr,acc FROM members WHERE usr='{$_POST['username']}' AND pass='".md5($_POST['password'])."'"));
 
@@ -48,9 +38,6 @@ if($_POST['submit']=='Login')
             $_SESSION['usr']=$row['usr'];
             $_SESSION['id'] = $row['id'];
             $_SESSION['acc'] = $row['acc'];
-            $_SESSION['rememberMe'] = $_POST['rememberMe'];
-            
-            setcookie('eceRemember',$_POST['rememberMe']);
             
             $_SESSION['msg']['success']='Hey! You\'re now logged in as '.$_SESSION['usr'];
             
