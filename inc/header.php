@@ -5,7 +5,7 @@
     <head>
 
         <!-- Basic -->
-        <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
         <title>UCLA ECE Krieger Auction Manager</title>
         <meta name="keywords" content="UCLA, ECE, Krieger, auction, manager" />
         <meta name="description" content="UCLA ECE Krieger Auction Manager">
@@ -20,8 +20,8 @@
         <!-- Libs CSS -->
         <link rel="stylesheet" href="css/bootstrap.css">
         <link rel="stylesheet" href="css/fonts/font-awesome/css/font-awesome.css">
-        <link rel="stylesheet" href="vendor/flexslider/flexslider.css" media="screen" />
-        <link rel="stylesheet" href="vendor/magnific-popup/magnific-popup.css" media="screen" />
+        <!-- <link rel="stylesheet" href="vendor/flexslider/flexslider.css" media="screen" />
+        <link rel="stylesheet" href="vendor/magnific-popup/magnific-popup.css" media="screen" /> -->
 
         <!-- Theme CSS -->
         <link rel="stylesheet" href="css/theme.css">
@@ -30,7 +30,6 @@
         <link rel="stylesheet" href="css/theme-animate.css">
 
         <!-- Custom CSS -->
-        <link rel="stylesheet" href="css/custom.css">
         <link rel="stylesheet" href="css/tablecloth.css">
         <link rel="stylesheet" href="css/bootstrap-tables.css">
 
@@ -247,7 +246,7 @@
                                 </div>
                             </li>
                             <span class="span1 pull-right">
-                                <a rel="tooltip" href="manage.php?tab=acc" data-original-title="Logged in as <?=$_SESSION['usr'].' (Access level: '.$_SESSION['acc'].')';?>"><i class="icon-user icon-large"></i></a>
+                                <a rel="tooltip" href="manage.php#account" data-original-title="Logged in as <?=$_SESSION['usr'].' (Access level: '.$_SESSION['acc'].')';?>"><i class="icon-user icon-large"></i></a>
                                 <?php
                                     //select proper info from msg table
                                     $newqry = 'SELECT * FROM msg WHERE usr_id = '.$_SESSION['id'].' AND new = 0';
@@ -259,7 +258,7 @@
                                     } else {
                                         $badge = 'badge-success';
                                     }
-                                        echo '<a href="manage.php?tab=msg"><span class="badge '.$badge.'">'.$new.'</span></a>';
+                                        echo '<a href="manage.php#messages"><span class="badge '.$badge.'">'.$new.'</span></a>';
                                 ?>
                             </span>
                         <?php
@@ -277,30 +276,30 @@
                                 <a href="solicit.php">Solicit</a>
                             </li>
                             <li class="dropdown">
-                                <a class="dropdown-toggle" href="manage.php?tab=org">
+                                <a class="dropdown-toggle" href="manage.php">
                                     Manage
                                     <i class="icon-angle-down"></i>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="manage.php?tab=org">Organizations</a></li>
-                                    <li><a href="manage.php?tab=mine">My Assignments</a></li>
-                                    <li><a href="manage.php?tab=acc">Account</a></li>
-                                    <li><a href="manage.php?tab=msg">Messages</a></li>
+                                    <li><a href="manage.php#organization">Organizations</a></li>
+                                    <li><a href="manage.php#mine">My Assignments</a></li>
+                                    <li><a href="manage.php#account">Account</a></li>
+                                    <li><a href="manage.php#messages">Messages</a></li>
                                 </ul>
                             </li>
                             <li class="dropdown">
-                                <a class="dropdown-toggle" href="reports.php?tab=class">
+                                <a class="dropdown-toggle" href="reports.php">
                                     Reports
                                     <i class="icon-angle-down"></i>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="reports.php?tab=class">Classroom Leaderboard</a></li>
-                                    <li><a href="reports.php?tab=parent">Parent Leaderboard</a></li>
+                                    <li><a href="reports.php#classldr">Classroom Leaderboard</a></li>
+                                    <li><a href="reports.php#parentldr">Parent Leaderboard</a></li>
                                     <?php
                                         if($_SESSION['acc'] < 3) {
-                                            echo '<li><a href="reports.php?tab=rcv">Items Received</a></li>';
-                                            echo '<li><a href="reports.php?tab=yes">Will Donate</a></li>';
-                                            echo '<li><a href="reports.php?tab=no">Will Not Donate</a></li>';
+                                            echo '<li><a href="reports.php#itemsrcv">Items Received</a></li>';
+                                            echo '<li><a href="reports.php#donateyes">Will Donate</a></li>';
+                                            echo '<li><a href="reports.php#donateno">Will Not Donate</a></li>';
                                         }
                                     ?>
                                 </ul>
@@ -309,13 +308,13 @@
                                 if($_SESSION['acc'] < 3) {
                             ?>
                             <li class="dropdown">
-                                <a class="dropdown-toggle" href="admin.php?tab=class">
+                                <a class="dropdown-toggle" href="admin.php">
                                     Admin
                                     <i class="icon-angle-down"></i>
                                 </a>
                                 <ul class="dropdown-menu">
-                                    <li><a href="admin.php?tab=class">Classrooms</a></li>
-                                    <li><a href="admin.php?tab=cat">Categories</a></li>
+                                    <li><a href="admin.php#classrooms">Classrooms</a></li>
+                                    <li><a href="admin.php#categories">Categories</a></li>
                                 </ul>
                             </li>
                             <?php

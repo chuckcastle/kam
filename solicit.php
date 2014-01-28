@@ -15,7 +15,7 @@
     $total_items = mysql_fetch_array(mysql_query($query));
 
     $targetpage = "solicit.php";
-    $limit = 25;
+    $limit = 20;
     if(isset($_GET['page'])) {
         $page = $_GET['page'];
         $start = ($page - 1) * $limit;

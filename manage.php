@@ -17,29 +17,6 @@
     $usrid = $_SESSION['id'];
     $usr = $_SESSION['usr'];
     $access = $_SESSION['acc'];
-    $orgtab = '';
-    $minetab = '';
-    $acctab = '';
-    $msgtab = '';
-    
-    if(isset($_GET['tab'])){
-        switch($_GET['tab']){
-            case "org":
-                $orgtab = 'active';
-                break;
-            case "mine":
-                $minetab = 'active';
-                break;
-            case "acc":
-                $acctab = 'active';
-                break;
-            case "msg":
-                $msgtab = 'active';
-                break;
-            default:
-                $orgtab = 'active';
-        }
-    }
     
 //POST
 
@@ -158,20 +135,20 @@
 
     //select proper info from org table
     if($access >=3){
-        $where = ' WHERE donate <> 2';
+        $orgwhere = ' WHERE donate <> 2';
     } else {
-        $where = '';
+        $orgwhere = '';
     }
-    $orgqry = 'SELECT * FROM org'.$where.' ORDER BY name ASC';
+    $orgqry = 'SELECT * FROM org'.$orgwhere.' ORDER BY name ASC';
     $orgres = mysql_query($orgqry);
     
     //pagination
     $adjacents = 5;
-    $query = $orgqry;
+    $query = 'SELECT COUNT(*) FROM org'.$orgwhere;
     $total_items = mysql_fetch_array(mysql_query($query));
 
-    $targetpage = "manage.php?tab=org";
-    $limit = 25;
+    $targetpage = "manage.php";
+    $limit = 20;
     if(isset($_GET['page'])) {
         $page = $_GET['page'];
         $start = ($page - 1) * $limit;
@@ -181,8 +158,8 @@
     }
 
     //get data
-    $sql = 'SELECT * FROM org WHERE avail = 1 LIMIT '.$start.', '.$limit;
-    $result = mysql_query($sql);
+    $getdata = 'SELECT * FROM org'.$orgwhere.' LIMIT '.$start.', '.$limit;
+    $result = mysql_query($getdata);
 
     //setup page vars for display
     if ($page == 0) $page = 1;
@@ -319,13 +296,13 @@
 
                             <div class="tabs">
                                 <ul class="nav nav-tabs">
-                                    <li class="<?php echo $orgtab; ?>"><a href="#organization" data-toggle="tab"><i class="icon-building"></i> All Organizations (<?=mysql_num_rows($orgres);?>)</a></li>
-                                    <li class="<?php echo $minetab; ?>"><a href="#mine" data-toggle="tab"><i class="icon-user"></i> Assigned to Me (<?=mysql_num_rows($mineres);?>)</a></li>
-                                    <li class="<?php echo $acctab; ?>"><a href="#account" data-toggle="tab"><i class="icon-user"></i> Accounts (<?=mysql_num_rows($usrres);?>)</a></li>
-                                    <li class="<?php echo $msgtab; ?>"><a href="#messages" data-toggle="tab"><i class="icon-comment"></i> Messages (<?=mysql_num_rows($msgres);?>)</a></li>
+                                    <li class="active"><a href="#organization" data-toggle="tab"><i class="icon-building"></i> All Organizations (<?=mysql_num_rows($orgres);?>)</a></li>
+                                    <li><a href="#mine" data-toggle="tab"><i class="icon-user"></i> Assigned to Me (<?=mysql_num_rows($mineres);?>)</a></li>
+                                    <li><a href="#account" data-toggle="tab"><i class="icon-user"></i> Accounts (<?=mysql_num_rows($usrres);?>)</a></li>
+                                    <li><a href="#messages" data-toggle="tab"><i class="icon-comment"></i> Messages (<?=mysql_num_rows($msgres);?>)</a></li>
                                 </ul>
                                 <div class="tab-content">
-                                    <div class="tab-pane <?php echo $orgtab; ?>" id="organization">
+                                    <div class="tab-pane active" id="organization">
                                     <?php
                                         //only show if user access level is 3 - manager, 2 - admin, or 1 - root
                                         if($access <= 3){
@@ -389,7 +366,7 @@
                                             
                                             <tbody>
                                                 <?php
-                                                    while($row = mysql_fetch_array($orgres)) {
+                                                    while($row = mysql_fetch_array($result)) {
                                                         $ntqry = 'SELECT * FROM notes WHERE org_id = '.$row['id'].' ORDER BY dt DESC';
                                                         $ntres = mysql_query($ntqry);
                                                         $note = mysql_fetch_array($ntres);
@@ -424,9 +401,12 @@
                                                 ?>
                                             </tbody>
                                         </table>
+                                        <?php
+                                            echo $pagination;
+                                        ?>
                                     </div> <!-- /tab-pane organization -->
                                     
-                                    <div class="tab-pane <?php echo $minetab; ?>" id="mine">
+                                    <div class="tab-pane" id="mine">
                                         <table class="table table-striped">
                                             <thead>
                                                 <th>Organization</th>
@@ -472,7 +452,7 @@
                                         </table>
                                     </div> <!-- /tab-pane mine -->
                                     
-                                    <div class="tab-pane <?php echo $acctab; ?>" id="account">
+                                    <div class="tab-pane" id="account">
                                         <table class="table table-striped">
                                             <thead>
                                                 <th>Username</th>
@@ -629,7 +609,7 @@
                                         </table>
                                     </div> <!-- /tab-pane account -->
                                     
-                                    <div class="tab-pane <?php echo $msgtab; ?>" id="messages">
+                                    <div class="tab-pane" id="messages">
                                         <span class="pull-right"><a rel="tooltip" data-placement="top" href="#addmsg" data-original-title="Send Note" data-toggle="modal"><i class="icon-comment"></i><span class="alternative-font">&nbsp;Send Message</span></a></span>
                                             <div id="addmsg" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="addmsgLabel" aria-hidden="true">
 

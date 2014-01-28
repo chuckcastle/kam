@@ -22,35 +22,6 @@
     $dividedby = '/';
     $plus = '+';
     $minus = '-';
-    
-    $classtab = '';
-    $parenttab = '';
-    $rcvtab = '';
-    $yestab = '';
-    $notab = '';
-    
-    if(isset($_GET['tab'])){
-        switch($_GET['tab']){
-            case "class":
-                $classtab = 'active';
-                break;
-            case "parent":
-                $parenttab = 'active';
-                break;
-            case "rcv":
-                $rcvtab = 'active';
-                break;
-            case "yes":
-                $yestab = 'active';
-                break;
-            case "no":
-                $notab = 'active';
-                break;
-            default:
-                $classtab = 'active';
-        }
-    }
-    
         
 //SQL
 
@@ -164,20 +135,20 @@
                         <div class="span12">
                             <div class="tabs">
                                 <ul class="nav nav-tabs">
-                                    <li class="<?php echo $classtab; ?>"><a href="#classldr" data-toggle="tab"><i class="icon-group"></i> Classroom Leaderboard (<?php echo mysql_num_rows($clsldrres);?>)</a></li>
-                                    <li class="<?php echo $parenttab; ?>"><a href="#parentldr" data-toggle="tab"><i class="icon-user"></i> Parent Leaderboard (<?php echo mysql_num_rows($prtldrres);?>)</a></li>
+                                    <li class="active"><a href="#classldr" data-toggle="tab"><i class="icon-group"></i> Classroom Leaderboard (<?php echo mysql_num_rows($clsldrres);?>)</a></li>
+                                    <li><a href="#parentldr" data-toggle="tab"><i class="icon-user"></i> Parent Leaderboard (<?php echo mysql_num_rows($prtldrres);?>)</a></li>
                                     <?php
                                         if($access < 3){
                                     ?>
-                                    <li class="<?php echo $rcvtab; ?>"><a href="#itemsrcv" data-toggle="tab"><i class="icon-tags"></i> Items Received (<?php echo mysql_num_rows($rcvres);?>)</a></li>
-                                    <li class="<?php echo $yestab; ?>"><a href="#donateyes" data-toggle="tab"><i class="icon-thumbs-up"></i> Will Donate (<?php echo mysql_num_rows($yesres);?>)</a></li>
-                                    <li class="<?php echo $notab; ?>"><a href="#donateno" data-toggle="tab"><i class="icon-thumbs-down"></i> Will Not Donate (<?php echo mysql_num_rows($nores);?>)</a></li>
+                                    <li><a href="#itemsrcv" data-toggle="tab"><i class="icon-tags"></i> Items Received (<?php echo mysql_num_rows($rcvres);?>)</a></li>
+                                    <li><a href="#donateyes" data-toggle="tab"><i class="icon-thumbs-up"></i> Will Donate (<?php echo mysql_num_rows($yesres);?>)</a></li>
+                                    <li><a href="#donateno" data-toggle="tab"><i class="icon-thumbs-down"></i> Will Not Donate (<?php echo mysql_num_rows($nores);?>)</a></li>
                                     <?php
                                         }
                                     ?>
                                 </ul>
                                 <div class="tab-content">
-                                    <div class="tab-pane <?php echo $classtab; ?>" id="classldr">
+                                    <div class="tab-pane active" id="classldr">
                                         
                                         <table class="table table-striped">
                                             <thead>
@@ -212,7 +183,7 @@
                                         </table>
                                     </div> <!-- /tab-pane classldr -->
                                     
-                                    <div class="tab-pane <?php echo $parenttab; ?>" id="parentldr">
+                                    <div class="tab-pane" id="parentldr">
                                         <table class="table table-striped">
                                             <thead>
                                                 <th>Name</th>
@@ -239,7 +210,7 @@
                                     <?php
                                         if($access < 3){
                                     ?>                                    
-                                    <div class="tab-pane <?php echo $rcvtab; ?>" id="itemsrcv">
+                                    <div class="tab-pane" id="itemsrcv">
                                         <table class="table table-striped">
                                             <thead>
                                                 <th>Organization</th>
@@ -263,7 +234,7 @@
                                         </table>
                                     </div> <!-- /tab-pane itemsrcv -->
 
-                                    <div class="tab-pane <?php echo $yestab; ?>" id="donateyes">
+                                    <div class="tab-pane" id="donateyes">
                                         <table class="table table-striped">
                                             <thead>
                                                 <th>Organization</th>
@@ -297,7 +268,7 @@
                                         </table>
                                     </div> <!-- /tab-pane donateyes -->
                                     
-                                    <div class="tab-pane <?php echo $notab; ?>" id="donateno">
+                                    <div class="tab-pane" id="donateno">
                                         <table class="table table-striped">
                                             <thead>
                                                 <th>Organization</th>

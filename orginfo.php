@@ -98,7 +98,7 @@
         $res = mysql_query($sql);
 
         $_SESSION['msg']['info']='Right on!  You successfully deleted '.$name.'!';
-        header('Location: manage.php');
+        header('Location: manage.php?tab=org');
     }
 
 //SQL
