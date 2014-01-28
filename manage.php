@@ -395,7 +395,7 @@
                                                         echo '    <td>'.$row['poc_name'].'</td>';
                                                         echo '    <td>'.$row['poc_phone'].'</td>';
                                                         echo '    <td>'.$row['poc_email'].'</td>';
-                                                        echo '    <td><a rel="tooltip" data-placement="top" href="notes.php?orgid='.$row['id'].'" data-original-title="Goto notes"><i class="icon-edit icon-large"></i>&nbsp;</a><a rel="tooltip" data-placement="top" data-original-title="'.$note['note'].'"><span class="badge '.$badge.'">'.$notes.'</span></a></td>';
+                                                        echo '    <td><a rel="tooltip" data-placement="top" href="notes.php?orgid='.$row['id'].'" data-original-title="Goto notes"><i class="icon-edit icon-2x"></i>&nbsp;</a><a rel="tooltip" data-placement="top" data-original-title="'.$note['note'].'"><span class="badge '.$badge.'">'.$notes.'</span></a></td>';
                                                         echo '</tr>';
                                                     }
                                                 ?>
@@ -444,7 +444,7 @@
                                                         echo '    <td>'.$row['poc_name'].'</td>';
                                                         echo '    <td>'.$row['poc_phone'].'</td>';
                                                         echo '    <td>'.$row['poc_email'].'</td>';
-                                                        echo '    <td><a rel="tooltip" data-placement="top" href="notes.php?orgid='.$row['id'].'" data-original-title="Goto notes"><i class="icon-edit icon-large"></i>&nbsp;</a><a rel="tooltip" data-placement="top" data-original-title="'.$note['note'].'"><span class="badge '.$badge.'">'.$notes.'</span></a></td>';
+                                                        echo '    <td><a rel="tooltip" data-placement="top" href="notes.php?orgid='.$row['id'].'" data-original-title="Goto notes"><i class="icon-edit icon-2x"></i>&nbsp;</a><a rel="tooltip" data-placement="top" data-original-title="'.$note['note'].'"><span class="badge '.$badge.'">'.$notes.'</span></a></td>';
                                                         echo '</tr>';
                                                     }
                                                 ?>
@@ -661,9 +661,9 @@
                                                         }
                                                         echo '    <td>'.$row['dt'].'</td>';
                                                         if($row['new'] == 0) {
-                                                            echo '    <td><i class="icon-thumbs-up icon-large" onclick="document.markread'.$d.'.submit();"></i>&nbsp;<i class="icon-remove icon-large" onclick="document.delmsg'.$d.'.submit();"></i></td>';
+                                                            echo '    <td><i class="icon-thumbs-up icon-2x" onclick="document.markread'.$d.'.submit();"></i>&nbsp;<i class="icon-remove icon-2x" onclick="document.delmsg'.$d.'.submit();"></i></td>';
                                                         } else {
-                                                            echo '    <td><i class="icon-remove icon-large" onclick="document.delmsg'.$d.'.submit();"></i></td>';
+                                                            echo '    <td><i class="icon-remove icon-2x" onclick="document.delmsg'.$d.'.submit();"></i></td>';
                                                         }
                                                         echo '</tr>';
                                                         
