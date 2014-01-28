@@ -164,6 +164,113 @@
     }
     $orgqry = 'SELECT * FROM org'.$where.' ORDER BY name ASC';
     $orgres = mysql_query($orgqry);
+    
+    //pagination
+    $adjacents = 5;
+    $query = $orgqry;
+    $total_items = mysql_fetch_array(mysql_query($query));
+
+    $targetpage = "manage.php?tab=org";
+    $limit = 25;
+    if(isset($_GET['page'])) {
+        $page = $_GET['page'];
+        $start = ($page - 1) * $limit;
+    } else {
+        $page = 0;
+        $start = 0;
+    }
+
+    //get data
+    $sql = 'SELECT * FROM org WHERE avail = 1 LIMIT '.$start.', '.$limit;
+    $result = mysql_query($sql);
+
+    //setup page vars for display
+    if ($page == 0) $page = 1;
+    $prev = $page - 1;
+    $next = $page + 1;
+    $lastpage = ceil($total_items[0]/$limit);
+    $lpm1 = $lastpage - 1;
+
+    $pagination = "";
+    if($lastpage > 1) { 
+        $pagination .= '<div class="pagination pagination-center"><ul>';
+        
+        //previous button
+        if ($page > 1) {
+            $pagination .= '<li><a href="'.$targetpage.'?page='.$prev.'">&laquo;</a></li>';
+        } else {
+            $pagination .= '<li class="disabled"><a href="#">&laquo;</a></li>';
+        }
+        
+        //pages 
+        if ($lastpage < 7 + ($adjacents * 2)) /* not enough pages to bother breaking it up */ { 
+            for ($counter = 1; $counter <= $lastpage; $counter++) {
+                if ($counter == $page) {
+                    $pagination .= '<li class="active"><a href="#">'.$counter.'</a></li>';
+                } else {
+                    $pagination .= '<li><a href="'.$targetpage.'?page='.$counter.'">'.$counter.'</a></li>';
+                }
+            }
+        } elseif($lastpage > 5 + ($adjacents * 2))  /* enough pages to hide some */ {
+            //close to beginning; only hide later pages
+            if($page < 1 + ($adjacents * 2)) {
+                for ($counter = 1; $counter < 4 + ($adjacents * 2); $counter++) {
+                    if ($counter == $page) {
+                        $pagination .= '<li class="active"><a href="#">'.$counter.'</a></li>';
+                    } else {
+                        $pagination .= '<li><a href="'.$targetpage.'?page='.$counter.'">'.$counter.'</a></li>';
+                    }
+                }
+                
+                $pagination .= '<li><a href="#">...</a></li>';
+                $pagination .= '<li><a href="'.$targetpage.'?page='.$lpm1.'">'.$lpm1.'</a></li>';
+                $pagination .= '<li><a href="'.$targetpage.'?page='.$lastpage.'">'.$lastpage.'</a></li>';   
+            }
+        
+            //in middle; hide some front and some back
+            elseif($lastpage - ($adjacents * 2) > $page && $page > ($adjacents * 2)) {
+                $pagination .= '<li><a href="'.$targetpage.'?page=1">1</a></li>';
+                $pagination .= '<li><a href="'.$targetpage.'?page=2">2</a></li>';
+                $pagination .= '<li><a href="#">...</a></li>';
+            
+                for ($counter = $page - $adjacents; $counter <= $page + $adjacents; $counter++) {
+                    if ($counter == $page) {
+                        $pagination .= '<li class="active"><a href="#">'.$counter.'</a></li>';
+                    } else {
+                        $pagination .= '<li><a href="'.$targetpage.'?page='.$counter.'">'.$counter.'</a></li>';
+                    }
+                }
+            
+                $pagination .= '<a href="#">...</a>';
+                $pagination .= '<li><a href="'.$targetpage.'?page='.$lpm1.'">'.$lpm1.'</a></li>';
+                $pagination .= '<li><a href="'.$targetpage.'?page='.$lastpage.'">'.$lastpage.'</a></li>';   
+            }
+        
+            //close to end; only hide early pages
+            else {
+                $pagination .= '<li><a href="'.$targetpage.'?page=1">1</a></li>';
+                $pagination .= '<li><a href="'.$targetpage.'?page=2">2</a></li>';
+                $pagination .= '<li><a href="#">...</a></li>';
+            
+                for ($counter = $lastpage - (2 + ($adjacents * 2)); $counter <= $lastpage; $counter++) {
+                    if ($counter == $page) {
+                        $pagination .= '<li class="active"><a href="#">'.$counter.'</a></li>';
+                    } else {
+                        $pagination .= '<li><a href="'.$targetpage.'?page='.$counter.'">'.$counter.'</a></li>';
+                    }
+                }
+            }
+        } //pages
+    
+        //next button
+        if ($page < $counter - 1) {
+            $pagination .= '<li><a href="'.$targetpage.'?page='.$next.'">&raquo;</a></li>';
+        } else {
+            $pagination .= '<li class="disabled"><a href="#">&raquo;</a></li>';
+        }
+
+        $pagination .= '</ul></div>';   
+    } //$lastpage > 1
 
     //select proper info from members table
     switch($access){
@@ -266,7 +373,10 @@
                                                 </form>
                                             </div> <!-- /modal-footer -->
                                         </div> <!-- /addorg modal -->
-                                        <?php } ?>
+                                        <?php
+                                            } 
+                                        echo $pagination;
+                                        ?>
 
                                         <table class="table table-striped">
                                             <thead>
