@@ -164,7 +164,7 @@
                                         <div class="comment-block">
                                             <?php if($access < 3): ?>
                                             <span class="pull-right">
-                                                <a rel="tooltip" data-placement="top" href="#edititem<?=$i;?>" data-original-title="Edit" data-toggle="modal"><i class="icon-edit"></i></a>
+                                                <a rel="tooltip" data-placement="top" href="#edititem<?=$i;?>" data-original-title="Edit" data-toggle="modal"><i class="icon-edit icon-2x"></i></a>
                                             </span>
                                             <!-- edititem modal -->
                                             <div id="edititem<?=$i;?>" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="edititemLabel" aria-hidden="true">
@@ -191,6 +191,7 @@
                                                             Credit goes to:
                                                         </label>
                                                         <select name="class">
+                                                        <option value="">Select Classroom:</option>
                                                         <?php 
                                                             $sql2 = 'SELECT class.id AS classid, class.name FROM class JOIN members ON members.class_id = class.id OR members.class_id2 = class.id JOIN org ON org.usr_id = members.id JOIN items ON items.org_id = org.id WHERE org.id = '.$orgid;
                                                             $res2 = mysql_query($sql2);

@@ -26,7 +26,7 @@
 //SQL
 
     //classroom leaderboard
-    $clsldrqry = 'SELECT class.id, class.name, class.numkids, SUM(items.value) AS total, (class.numkids*50) AS goal FROM  org JOIN members ON org.usr_id = members.id JOIN items ON items.org_id = org.id JOIN class ON items.class_id = class.id GROUP BY class.name ORDER BY total DESC';
+    $clsldrqry = 'SELECT class.id, class.name, class.numkids, SUM(items.value) AS total, (class.numkids*50) AS goal FROM class LEFT JOIN items ON items.class_id = class.id WHERE items.received = 1 GROUP BY class.name ORDER BY total DESC';
     $clsldrres = mysql_query($clsldrqry);
     
     $highnum = mysql_fetch_array(mysql_query("SELECT id, numkids FROM class ORDER BY numkids DESC"));
