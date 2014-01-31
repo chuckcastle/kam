@@ -41,7 +41,6 @@
         <script src="vendor/jquery.tablecloth.js"></script>
         <script src="vendor/magnific-popup/magnific-popup.js"></script>
         <script src="vendor/jquery.validate.js"></script>
-        <script src="vendor/simple-pagination/simple-pagination.js"></script>
         
         <script src="js/plugins.js"></script>
         
