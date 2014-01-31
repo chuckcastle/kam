@@ -191,7 +191,6 @@
                                                             Credit goes to:
                                                         </label>
                                                         <select name="class">
-                                                        <option value="">Select Classroom:</option>
                                                         <?php 
                                                             $sql2 = 'SELECT class.id AS classid, class.name FROM class JOIN members ON members.class_id = class.id OR members.class_id2 = class.id JOIN org ON org.usr_id = members.id JOIN items ON items.org_id = org.id WHERE org.id = '.$orgid;
                                                             $res2 = mysql_query($sql2);
@@ -262,7 +261,7 @@
             <?php 
                 $sql = 'SELECT class.name FROM class JOIN members ON members.class_id = class.id OR members.class_id2 = class.id JOIN org ON org.usr_id = members.id JOIN items ON items.org_id = org.id WHERE org.id = '.$orgid;
                 $res = mysql_query($sql);
-                while($row = mysql_fetch_array($res)) { 
+                while($row = mysql_fetch_array($res)) {
                     echo '<option value="'.$row['id'].'">'.$row['name'].'</option>';
                 }
             ?>
@@ -276,5 +275,6 @@
 
 
 <?php
+//include html footer
     include('inc/footer.php');
 ?>

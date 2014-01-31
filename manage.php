@@ -79,6 +79,7 @@
         $fname = val($_POST['fname']);
         $lname = val($_POST['lname']);
         $email = val($_POST['email']);
+        $opt_out = val($_POST['opt_out']);
 
         $updqry = 'SELECT * FROM members WHERE id = '.$id;
         $updres = mysql_query($updqry);
@@ -105,7 +106,7 @@
             $assign = val($_POST['assign']);
         }
    
-        $sql = 'UPDATE members SET fname="'.nameize($fname).'", lname="'.nameize($lname).'", email="'.$email.'", acc="'.$acc.'", assign="'.$assign.'", class_id = "'.$class_id.'", class_id2 = "'.$class_id2.'" WHERE members.id='.$id.' LIMIT 1';
+        $sql = 'UPDATE members SET fname="'.nameize($fname).'", lname="'.nameize($lname).'", email="'.$email.'", acc="'.$acc.'", assign="'.$assign.'", class_id = "'.$class_id.'", class_id2 = "'.$class_id2.'", opt_out = "'.$opt_out.'" WHERE members.id='.$id.' LIMIT 1';
         $res = mysql_query($sql);
 
         $_SESSION['msg']['success']='Right on!  You just updated '.$user['usr'].'!';
@@ -251,17 +252,17 @@
 
     //select proper info from members table
     switch($access){
-        case 4:
-            $where = ' WHERE id = '.$usrid;
-            break;
-        case 3:
+        case 3: //manager
             $where = ' WHERE id = '.$usrid.' OR sub = '.$usrid;
             break;
-        case 2:
-            $where = ' WHERE acc NOT LIKE 1 AND sub NOT LIKE 11';
+        case 2: //administrator
+            $where = ' WHERE acc > 1 AND sub NOT LIKE 11';
             break;
-        default:
+        case 1: //root
             $where = '';
+            break;
+        default: //everyone else
+            $where = ' WHERE id = '.$usrid;
     }
     $usrqry = 'SELECT * FROM members'.$where.' ORDER BY usr ASC';
     $usrres = mysql_query($usrqry);
@@ -305,7 +306,7 @@
                                     <div class="tab-pane active" id="organization">
                                     <?php
                                         //only show if user access level is 3 - manager, 2 - admin, or 1 - root
-                                        if($access <= 3){
+                                        if($access < 4){
                                     ?>
                                         <span class="pull-right"><a rel="tooltip" data-placement="top" href="#addorg" data-original-title="Add Organization" data-toggle="modal"><i class="icon-plus"></i><span class="alternative-font">&nbsp;Add Organization</span></a></span>
                                             <div id="addorg" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="addorgLabel" aria-hidden="true">
@@ -395,7 +396,7 @@
                                                         echo '    <td>'.$row['poc_name'].'</td>';
                                                         echo '    <td>'.$row['poc_phone'].'</td>';
                                                         echo '    <td>'.$row['poc_email'].'</td>';
-                                                        echo '    <td><a rel="tooltip" data-placement="top" href="notes.php?orgid='.$row['id'].'" data-original-title="Goto notes"><i class="icon-edit icon-2x"></i>&nbsp;</a><a rel="tooltip" data-placement="top" data-original-title="'.$note['note'].'"><span class="badge '.$badge.'">'.$notes.'</span></a></td>';
+                                                        echo '    <td><a rel="tooltip" data-placement="top" href="notes.php?orgid='.$row['id'].'" data-original-title="'.$note['note'].'"><span class="badge '.$badge.'">'.$notes.'</span></a></td>';
                                                         echo '</tr>';
                                                     }
                                                 ?>
@@ -444,7 +445,7 @@
                                                         echo '    <td>'.$row['poc_name'].'</td>';
                                                         echo '    <td>'.$row['poc_phone'].'</td>';
                                                         echo '    <td>'.$row['poc_email'].'</td>';
-                                                        echo '    <td><a rel="tooltip" data-placement="top" href="notes.php?orgid='.$row['id'].'" data-original-title="Goto notes"><i class="icon-edit icon-2x"></i>&nbsp;</a><a rel="tooltip" data-placement="top" data-original-title="'.$note['note'].'"><span class="badge '.$badge.'">'.$notes.'</span></a></td>';
+                                                        echo '    <td><a rel="tooltip" data-placement="top" href="notes.php?orgid='.$row['id'].'" data-original-title="'.$note['note'].'"><span class="badge '.$badge.'">'.$notes.'</span></a></td>';
                                                         echo '</tr>';
                                                     }
                                                 ?>
@@ -566,6 +567,11 @@
                                                                             <option value="0"<? if($row['assign']==0){echo ' selected';}?>>No</option>
                                                                             <option value="1"<? if($row['assign']==1){echo ' selected';}?>>Yes</option>
                                                                         </select>
+                                                                    <label class="span3">Receive Emails from KAM?</label>
+                                                                        <select name="opt_out"  class="span3">
+                                                                            <option value="0"<? if($row['opt_out']==0){echo ' selected';}?>>Yes</option>
+                                                                            <option value="1"<? if($row['opt_out']==1){echo ' selected';}?>>No</option>
+                                                                        </select>
                                                                 <?php endif; ?>
                                                             </div> <!-- /modal-body -->
 
@@ -683,5 +689,6 @@
             </div> <!-- /main -->
             
 <?php
+//include html footer
     include('inc/footer.php');
 ?>

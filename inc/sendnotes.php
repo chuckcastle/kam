@@ -30,7 +30,7 @@ function send_mail($from,$to,$subject,$body)
 }
 
 //email new messages
-    $newqry = 'SELECT COUNT(*) AS new, usr_id, members.email FROM msg INNER JOIN members ON usr_id=members.id WHERE msg.new = "0" GROUP BY usr_id';
+    $newqry = 'SELECT COUNT(*) AS new, usr_id, members.email, members.opt_out FROM msg INNER JOIN members ON usr_id=members.id WHERE msg.new = "0" AND members.opt_out = "0" GROUP BY usr_id';
     $newres = mysql_query($newqry);
 
     while($msg = mysql_fetch_array($newres)){
@@ -41,7 +41,7 @@ function send_mail($from,$to,$subject,$body)
     }
     
 //email motivation
-    $prtldrqry = 'SELECT members.fname, members.lname, members.email, SUM(items.value) AS total FROM org JOIN members ON org.usr_id = members.id JOIN items ON items.org_id = org.id GROUP BY members.usr ORDER BY total DESC';
+    $prtldrqry = 'SELECT members.opt_out, members.fname, members.lname, members.email, SUM(items.value) AS total FROM org JOIN members ON org.usr_id = members.id JOIN items ON items.org_id = org.id WHERE members.opt_out = "0" GROUP BY members.usr ORDER BY total DESC';
     $prtldrres = mysql_query($prtldrqry);
     
     while($ldr = mysql_fetch_array($prtldrres)){

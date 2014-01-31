@@ -246,12 +246,8 @@
                                     </div> <!-- /tab-pane classrooms -->
                                     
                                     <div class="tab-pane" id="categories">
-                                    <?php
-                                        //only show if user access level is 3 - manager, 2 - admin, or 1 - root
-                                        if($access <= 3){
-                                            echo '<span class="pull-right"><a rel="tooltip" data-placement="top" href="#addcat" data-original-title="Add Category" data-toggle="modal"><i class="icon-plus"></i><span class="alternative-font">&nbsp;Add Category</span></a></span>';
-                                        }
-                                    ?>
+                                    
+                                        <span class="pull-right"><a rel="tooltip" data-placement="top" href="#addcat" data-original-title="Add Category" data-toggle="modal"><i class="icon-plus"></i><span class="alternative-font">&nbsp;Add Category</span></a></span>
                                         <table class="table table-striped">
                                             <thead>
                                                 <th>Category</th>
@@ -304,7 +300,7 @@
                                                             </div> <!-- /modal-header -->
 
                                                             <div class="modal-body">
-                                                                <p>                            
+                                                                <p>
                                                                 <?php
                                                                     while($orgs = mysql_fetch_array($res)) {
                                                                         echo '<a href="orginfo.php?orgid='.$orgs['orgid'].'">'.$orgs['name'].'</a><br />';

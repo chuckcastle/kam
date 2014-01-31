@@ -161,21 +161,25 @@
                                             
                                             <tbody>
                                             <?php
-                                                while($row = mysql_fetch_array($clsldrres)) {
-                                                    
-                                                    //highest number of kids / number of kids in classroom
-                                                    $magicnum = number_format(eval('return '.$highnum.$dividedby.$row['numkids'].';'), 3, '.', ',');    
-                                                    //total raised * weighted value above
-                                                    $weight = number_format(eval('return '.$row['total'].$times.$magicnum.';'), 2, '.', ',');
-                                                    //percentage of goal
-                                                    $goal = round(($row['total']/$row['goal'])*100).'%';
-                                                    
+                                                while($row = mysql_fetch_array($clsldrres)) {                                                    
                                                     echo '<tr>'."\n";
                                                     echo '    <td>'.$row['name'].'</td>'."\n";
                                                     echo '    <td>$'.$row['total'].'</td>'."\n";
-                                                    echo '    <td>$'.$row['goal'].'</td>'."\n";
-                                                    echo '    <td>'.$goal.'</td>'."\n";
-                                                    echo '    <td>$'.$weight.'&nbsp;(x'.$magicnum.')</td>'."\n";
+                                                    //highest number of kids / number of kids in classroom
+                                                    if($row['id'] != '11'){
+
+                                                        $magicnum = number_format(eval('return '.$highnum.$dividedby.$row['numkids'].';'), 3, '.', ',');    
+
+                                                        //total raised * weighted value above
+                                                        $weight = number_format(eval('return '.$row['total'].$times.$magicnum.';'), 2, '.', ',');
+
+                                                        //percentage of goal
+                                                        $goal = round(($row['total']/$row['goal'])*100).'%';
+
+                                                        echo '    <td>$'.$row['goal'].'</td>'."\n";
+                                                        echo '    <td>'.$goal.'</td>'."\n";
+                                                        echo '    <td>$'.$weight.'&nbsp;(x'.$magicnum.')</td>'."\n";
+                                                    }
                                                     echo '</tr>'."\n";
                                                 }
                                             ?>
@@ -222,8 +226,9 @@
                                             <tbody>
                                             <?php
                                                 while($row = mysql_fetch_array($rcvres)) {
-                                                    echo '<tr>'."\n";
-                                                    echo '    <td><a href="orginfo.php?orgid='.$row['id'].'">'.$row['name'].'</a></td>'."\n";
+                                                    $orgname = (strlen($row['name']) > 23) ? substr($row['name'],0,20).'...' : $row['name'];
+													echo '<tr>'."\n";;
+													echo '    <td><a href="orginfo.php?orgid='.$row['id'].'" title="'.$row['name'].'">'.$orgname.'</a></td>'."\n";;
                                                     echo '    <td>'.$row['desc'].'</td>'."\n";
                                                     echo '    <td>$'.$row['value'].'</td>'."\n";
                                                     echo '    <td>'.$row['location'].'</td>'."\n";
@@ -255,8 +260,9 @@
                                                         } else {
                                                             $rcv = 'Yes';
                                                         }
+                                                        $orgname = (strlen($row['name']) > 23) ? substr($row['name'],0,20).'...' : $row['name'];
                                                         echo '<tr>'."\n";
-                                                        echo '    <td><a href="orginfo.php?orgid='.$row['id'].'">'.$row['name'].'</a></td>'."\n";
+                                                        echo '    <td><a href="orginfo.php?orgid='.$row['id'].'" title="'.$row['name'].'">'.$orgname.'</a></td>'."\n";
                                                         echo '    <td>'.$rcv.'</td>'."\n";
                                                         echo '    <td>'.$row['poc_name'].'</td>'."\n";
                                                         echo '    <td>'.$row['poc_phone'].'</td>'."\n";
@@ -280,8 +286,9 @@
                                             <tbody>
                                             <?php
                                                 while($row = mysql_fetch_array($nores)) {
+                                                    $orgname = (strlen($row['name']) > 23) ? substr($row['name'],0,20).'...' : $row['name'];
                                                     echo '<tr>'."\n";
-                                                    echo '    <td><a href="orginfo.php?orgid='.$row['id'].'">'.$row['name'].'</a></td>'."\n";
+                                                    echo '    <td><a href="orginfo.php?orgid='.$row['id'].'" title="'.$row['name'].'">'.$orgname.'</a></td>'."\n";
                                                     echo '    <td>'.$row['poc_name'].'</td>'."\n";
                                                     echo '    <td>'.$row['poc_phone'].'</td>'."\n";
                                                     echo '    <td>'.$row['poc_email'].'</td>'."\n";
