@@ -1,36 +1,27 @@
-/* Add here all your JS customizations */
-
 /* checkPass */
 function checkPass() {
     var password = $("#pass").val();
     var confirmPassword = $("#vpass").val();
-    
-    if (password != confirmPassword)
-        $("#lblcheckpass").html("Passwords do not match!");
-    else
-        $("#lblcheckpass").html("Passwords match.");
+    if (password != confirmPassword) $("#lblcheckpass").html("Passwords do not match!");
+    else $("#lblcheckpass").html("Passwords match.");
 }
-
-$(document).ready(function () {
+$(document).ready(function() {
     $("#vpass").keyup(checkPass);
 });
-
 
 /* Tablecloth */
 $(document).ready(function() {
     $("table").tablecloth({
-        sortable: true,
+        sortable: true
     });
 });
 
-
-// Javascript to enable link to tab
+/* Link-to-tab */
 var url = document.location.toString();
 if (url.match('#')) {
-    $('.nav-tabs a[href=#'+url.split('#')[1]+']').tab('show') ;
-} 
-
+    $('.nav-tabs a[href=#' + url.split('#')[1] + ']').tab('show');
+}
 // Change hash for page-reload
-$('.nav-tabs a').on('shown', function (e) {
+$('.nav-tabs a').on('shown', function(e) {
     window.location.hash = e.target.hash;
 });
