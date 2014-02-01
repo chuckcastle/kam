@@ -10,7 +10,7 @@
     }
   
 //SQL & pagination
-    $adjacents = 5;
+    $adjacents = 4;
     $query = 'SELECT COUNT(*) FROM org WHERE avail = 1';
     $total_items = mysql_fetch_array(mysql_query($query));
 
@@ -37,7 +37,7 @@
 
     $pagination = "";
     if($lastpage > 1) { 
-        $pagination .= '<div class="pagination pagination-center"><ul>';
+        $pagination .= '<div class="pagination pagination-large pagination-center"><ul>';
         
         //previous button
         if ($page > 1) {
@@ -188,7 +188,6 @@
                         </p>
                         <?php
                             } else {
-                                echo $pagination;
                         ?>
                         <p class="featured lead">
                             Not sure who to contact?  These are some of the businesses that have donated in the past:
@@ -197,6 +196,9 @@
                         <p class="featured lead">
                             Don't see a business that you'd like to solicit from?  Send a <a href="manage.php#messages">message</a> to R. Castillo, J. Sorenson, or S. Ervin!
                         </p>
+                        <?php
+                            echo $pagination;
+                        ?>
 
                         <table class="table table-striped">
                             <thead>
