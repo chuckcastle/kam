@@ -26,22 +26,6 @@
     $usr = $_SESSION['usr'];
     $access = $_SESSION['acc'];
     
-    $classtab = '';
-    $cattab = '';
-    
-    if(isset($_GET['tab'])){
-        switch($_GET['tab']){
-            case "class":
-                $classtab = 'active';
-                break;
-            case "cat":
-                $cattab = 'active';
-                break;
-            default:
-                $classtab = 'active';
-        }
-    }
-    
 //POST
     //if submit updclass
     if($_POST['submit']=='Update') {
@@ -159,11 +143,11 @@
 
                             <div class="tabs">
                                 <ul class="nav nav-tabs">
-                                    <li class="<?php echo $classtab; ?>"><a href="#classrooms" data-toggle="tab"><i class="icon-group"></i> Classrooms (<?=mysql_num_rows($classres);?>)</a></li>
-                                    <li class="<?php echo $cattab; ?>"><a href="#categories" data-toggle="tab"><i class="icon-folder-open"></i> Categories (<?=mysql_num_rows($catres);?>)</a></li>
+                                    <li class="active"><a href="#classrooms" data-toggle="tab"><i class="icon-group"></i> Classrooms (<?=mysql_num_rows($classres);?>)</a></li>
+                                    <li><a href="#categories" data-toggle="tab"><i class="icon-folder-open"></i> Categories (<?=mysql_num_rows($catres);?>)</a></li>
                                 </ul>
                                 <div class="tab-content">
-                                    <div class="tab-pane <?php echo $classtab; ?>" id="classrooms">
+                                    <div class="tab-pane active" id="classrooms">
                                         <table class="table table-striped">
                                             <thead>
                                                 <th>Classroom</th>
@@ -261,13 +245,9 @@
                                         </table>
                                     </div> <!-- /tab-pane classrooms -->
                                     
-                                    <div class="tab-pane <?php echo $cattab; ?>" id="categories">
-                                    <?php
-                                        //only show if user access level is 3 - manager, 2 - admin, or 1 - root
-                                        if($access <= 3){
-                                            echo '<span class="pull-right"><a rel="tooltip" data-placement="top" href="#addcat" data-original-title="Add Category" data-toggle="modal"><i class="icon-plus"></i><span class="alternative-font">&nbsp;Add Category</span></a></span>';
-                                        }
-                                    ?>
+                                    <div class="tab-pane" id="categories">
+                                    
+                                        <span class="pull-right"><a rel="tooltip" data-placement="top" href="#addcat" data-original-title="Add Category" data-toggle="modal"><i class="icon-plus"></i><span class="alternative-font">&nbsp;Add Category</span></a></span>
                                         <table class="table table-striped">
                                             <thead>
                                                 <th>Category</th>
@@ -320,7 +300,7 @@
                                                             </div> <!-- /modal-header -->
 
                                                             <div class="modal-body">
-                                                                <p>                            
+                                                                <p>
                                                                 <?php
                                                                     while($orgs = mysql_fetch_array($res)) {
                                                                         echo '<a href="orginfo.php?orgid='.$orgs['orgid'].'">'.$orgs['name'].'</a><br />';

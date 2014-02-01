@@ -22,40 +22,11 @@
     $dividedby = '/';
     $plus = '+';
     $minus = '-';
-    
-    $classtab = '';
-    $parenttab = '';
-    $rcvtab = '';
-    $yestab = '';
-    $notab = '';
-    
-    if(isset($_GET['tab'])){
-        switch($_GET['tab']){
-            case "class":
-                $classtab = 'active';
-                break;
-            case "parent":
-                $parenttab = 'active';
-                break;
-            case "rcv":
-                $rcvtab = 'active';
-                break;
-            case "yes":
-                $yestab = 'active';
-                break;
-            case "no":
-                $notab = 'active';
-                break;
-            default:
-                $classtab = 'active';
-        }
-    }
-    
         
 //SQL
 
     //classroom leaderboard
-    $clsldrqry = 'SELECT class.id, class.name, class.numkids, SUM(items.value) AS total, (class.numkids*50) AS goal FROM  org JOIN members ON org.usr_id = members.id JOIN items ON items.org_id = org.id JOIN class ON items.class_id = class.id GROUP BY class.name ORDER BY total DESC';
+    $clsldrqry = 'SELECT class.id, class.name, class.numkids, SUM(items.value) AS total, (class.numkids*50) AS goal FROM class LEFT JOIN items ON items.class_id = class.id WHERE items.received = 1 GROUP BY class.name ORDER BY total DESC';
     $clsldrres = mysql_query($clsldrqry);
     
     $highnum = mysql_fetch_array(mysql_query("SELECT id, numkids FROM class ORDER BY numkids DESC"));
@@ -164,20 +135,20 @@
                         <div class="span12">
                             <div class="tabs">
                                 <ul class="nav nav-tabs">
-                                    <li class="<?php echo $classtab; ?>"><a href="#classldr" data-toggle="tab"><i class="icon-group"></i> Classroom Leaderboard (<?php echo mysql_num_rows($clsldrres);?>)</a></li>
-                                    <li class="<?php echo $parenttab; ?>"><a href="#parentldr" data-toggle="tab"><i class="icon-user"></i> Parent Leaderboard (<?php echo mysql_num_rows($prtldrres);?>)</a></li>
+                                    <li class="active"><a href="#classldr" data-toggle="tab"><i class="icon-group"></i> Classroom Leaderboard (<?php echo mysql_num_rows($clsldrres);?>)</a></li>
+                                    <li><a href="#parentldr" data-toggle="tab"><i class="icon-user"></i> Parent Leaderboard (<?php echo mysql_num_rows($prtldrres);?>)</a></li>
                                     <?php
                                         if($access < 3){
                                     ?>
-                                    <li class="<?php echo $rcvtab; ?>"><a href="#itemsrcv" data-toggle="tab"><i class="icon-tags"></i> Items Received (<?php echo mysql_num_rows($rcvres);?>)</a></li>
-                                    <li class="<?php echo $yestab; ?>"><a href="#donateyes" data-toggle="tab"><i class="icon-thumbs-up"></i> Will Donate (<?php echo mysql_num_rows($yesres);?>)</a></li>
-                                    <li class="<?php echo $notab; ?>"><a href="#donateno" data-toggle="tab"><i class="icon-thumbs-down"></i> Will Not Donate (<?php echo mysql_num_rows($nores);?>)</a></li>
+                                    <li><a href="#itemsrcv" data-toggle="tab"><i class="icon-tags"></i> Items Received (<?php echo mysql_num_rows($rcvres);?>)</a></li>
+                                    <li><a href="#donateyes" data-toggle="tab"><i class="icon-thumbs-up"></i> Will Donate (<?php echo mysql_num_rows($yesres);?>)</a></li>
+                                    <li><a href="#donateno" data-toggle="tab"><i class="icon-thumbs-down"></i> Will Not Donate (<?php echo mysql_num_rows($nores);?>)</a></li>
                                     <?php
                                         }
                                     ?>
                                 </ul>
                                 <div class="tab-content">
-                                    <div class="tab-pane <?php echo $classtab; ?>" id="classldr">
+                                    <div class="tab-pane active" id="classldr">
                                         
                                         <table class="table table-striped">
                                             <thead>
@@ -190,21 +161,25 @@
                                             
                                             <tbody>
                                             <?php
-                                                while($row = mysql_fetch_array($clsldrres)) {
-                                                    
-                                                    //highest number of kids / number of kids in classroom
-                                                    $magicnum = number_format(eval('return '.$highnum.$dividedby.$row['numkids'].';'), 3, '.', ',');    
-                                                    //total raised * weighted value above
-                                                    $weight = number_format(eval('return '.$row['total'].$times.$magicnum.';'), 2, '.', ',');
-                                                    //percentage of goal
-                                                    $goal = round(($row['total']/$row['goal'])*100).'%';
-                                                    
+                                                while($row = mysql_fetch_array($clsldrres)) {                                                    
                                                     echo '<tr>'."\n";
                                                     echo '    <td>'.$row['name'].'</td>'."\n";
                                                     echo '    <td>$'.$row['total'].'</td>'."\n";
-                                                    echo '    <td>$'.$row['goal'].'</td>'."\n";
-                                                    echo '    <td>'.$goal.'</td>'."\n";
-                                                    echo '    <td>$'.$weight.'&nbsp;(x'.$magicnum.')</td>'."\n";
+                                                    //highest number of kids / number of kids in classroom
+                                                    if($row['id'] != '11'){
+
+                                                        $magicnum = number_format(eval('return '.$highnum.$dividedby.$row['numkids'].';'), 3, '.', ',');    
+
+                                                        //total raised * weighted value above
+                                                        $weight = number_format(eval('return '.$row['total'].$times.$magicnum.';'), 2, '.', ',');
+
+                                                        //percentage of goal
+                                                        $goal = round(($row['total']/$row['goal'])*100).'%';
+
+                                                        echo '    <td>$'.$row['goal'].'</td>'."\n";
+                                                        echo '    <td>'.$goal.'</td>'."\n";
+                                                        echo '    <td>$'.$weight.'&nbsp;(x'.$magicnum.')</td>'."\n";
+                                                    }
                                                     echo '</tr>'."\n";
                                                 }
                                             ?>
@@ -212,7 +187,7 @@
                                         </table>
                                     </div> <!-- /tab-pane classldr -->
                                     
-                                    <div class="tab-pane <?php echo $parenttab; ?>" id="parentldr">
+                                    <div class="tab-pane" id="parentldr">
                                         <table class="table table-striped">
                                             <thead>
                                                 <th>Name</th>
@@ -239,7 +214,7 @@
                                     <?php
                                         if($access < 3){
                                     ?>                                    
-                                    <div class="tab-pane <?php echo $rcvtab; ?>" id="itemsrcv">
+                                    <div class="tab-pane" id="itemsrcv">
                                         <table class="table table-striped">
                                             <thead>
                                                 <th>Organization</th>
@@ -251,8 +226,9 @@
                                             <tbody>
                                             <?php
                                                 while($row = mysql_fetch_array($rcvres)) {
-                                                    echo '<tr>'."\n";
-                                                    echo '    <td><a href="orginfo.php?orgid='.$row['id'].'">'.$row['name'].'</a></td>'."\n";
+                                                    $orgname = (strlen($row['name']) > 23) ? substr($row['name'],0,20).'...' : $row['name'];
+													echo '<tr>'."\n";;
+													echo '    <td><a href="orginfo.php?orgid='.$row['id'].'" title="'.$row['name'].'">'.$orgname.'</a></td>'."\n";;
                                                     echo '    <td>'.$row['desc'].'</td>'."\n";
                                                     echo '    <td>$'.$row['value'].'</td>'."\n";
                                                     echo '    <td>'.$row['location'].'</td>'."\n";
@@ -263,7 +239,7 @@
                                         </table>
                                     </div> <!-- /tab-pane itemsrcv -->
 
-                                    <div class="tab-pane <?php echo $yestab; ?>" id="donateyes">
+                                    <div class="tab-pane" id="donateyes">
                                         <table class="table table-striped">
                                             <thead>
                                                 <th>Organization</th>
@@ -284,8 +260,9 @@
                                                         } else {
                                                             $rcv = 'Yes';
                                                         }
+                                                        $orgname = (strlen($row['name']) > 23) ? substr($row['name'],0,20).'...' : $row['name'];
                                                         echo '<tr>'."\n";
-                                                        echo '    <td><a href="orginfo.php?orgid='.$row['id'].'">'.$row['name'].'</a></td>'."\n";
+                                                        echo '    <td><a href="orginfo.php?orgid='.$row['id'].'" title="'.$row['name'].'">'.$orgname.'</a></td>'."\n";
                                                         echo '    <td>'.$rcv.'</td>'."\n";
                                                         echo '    <td>'.$row['poc_name'].'</td>'."\n";
                                                         echo '    <td>'.$row['poc_phone'].'</td>'."\n";
@@ -297,7 +274,7 @@
                                         </table>
                                     </div> <!-- /tab-pane donateyes -->
                                     
-                                    <div class="tab-pane <?php echo $notab; ?>" id="donateno">
+                                    <div class="tab-pane" id="donateno">
                                         <table class="table table-striped">
                                             <thead>
                                                 <th>Organization</th>
@@ -309,8 +286,9 @@
                                             <tbody>
                                             <?php
                                                 while($row = mysql_fetch_array($nores)) {
+                                                    $orgname = (strlen($row['name']) > 23) ? substr($row['name'],0,20).'...' : $row['name'];
                                                     echo '<tr>'."\n";
-                                                    echo '    <td><a href="orginfo.php?orgid='.$row['id'].'">'.$row['name'].'</a></td>'."\n";
+                                                    echo '    <td><a href="orginfo.php?orgid='.$row['id'].'" title="'.$row['name'].'">'.$orgname.'</a></td>'."\n";
                                                     echo '    <td>'.$row['poc_name'].'</td>'."\n";
                                                     echo '    <td>'.$row['poc_phone'].'</td>'."\n";
                                                     echo '    <td>'.$row['poc_email'].'</td>'."\n";

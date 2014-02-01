@@ -6,16 +6,7 @@ require 'inc/connect.php';
 require 'inc/functions.php';
 
 //session config
-session_name('eceLogin');
-session_set_cookie_params(2*7*24*60*60);
 session_start();
-
-
-if($_SESSION['id'] && !isset($_COOKIE['eceRemember']) && !$_SESSION['rememberMe'])
-{
-    $_SESSION = array();
-    session_destroy();
-}
 
 //logoff
 if(isset($_GET['logoff']))
@@ -39,7 +30,6 @@ if($_POST['submit']=='Login')
     {
         $_POST['username'] = mysql_real_escape_string($_POST['username']);
         $_POST['password'] = mysql_real_escape_string($_POST['password']);
-        $_POST['rememberMe'] = (int)$_POST['rememberMe'];
 
         $row = mysql_fetch_assoc(mysql_query("SELECT id,usr,acc FROM members WHERE usr='{$_POST['username']}' AND pass='".md5($_POST['password'])."'"));
 
@@ -48,9 +38,6 @@ if($_POST['submit']=='Login')
             $_SESSION['usr']=$row['usr'];
             $_SESSION['id'] = $row['id'];
             $_SESSION['acc'] = $row['acc'];
-            $_SESSION['rememberMe'] = $_POST['rememberMe'];
-            
-            setcookie('eceRemember',$_POST['rememberMe']);
             
             $_SESSION['msg']['success']='Hey! You\'re now logged in as '.$_SESSION['usr'];
             
@@ -99,7 +86,46 @@ else if($_POST['submit']=='Register')
 
         $_POST['email'] = mysql_real_escape_string($_POST['email']);
         $_POST['username'] = mysql_real_escape_string($_POST['username']);
+                        
+        $p1qry = 'SELECT members.id, name, parent1 FROM class LEFT JOIN members ON members.id = class.parent1 WHERE class_id = '.$_POST['class'].' LIMIT 1';
+        $p1res = mysql_query($p1qry);
+        $p1rows = mysql_num_rows($p1res);
         
+        $p2qry = 'SELECT members.id, name, parent2 FROM class LEFT JOIN members ON members.id = class.parent2 WHERE class_id = '.$_POST['class2'].' LIMIT 1';
+        $p2res = mysql_query($p2qry);
+        $p2rows = mysql_num_rows($p2res);
+        
+        if($p1rows == 0){
+            $p1 = '11';
+        } else {
+            $fetch1 = mysql_fetch_array($p1res);
+            $p1 = $fetch1['id'];
+        }
+        
+        mysql_query("INSERT INTO msg(text,usr_id,new,dt)
+                        VALUES(
+                            '".$_POST['fname']." ".$_POST['lname']." registered an account.',
+                            '".$p1."',
+                            0,
+                            now()
+                        )");
+        
+        if($p2rows == 0){
+            $p2 = '';
+        } else {
+            $fetch2 = mysql_fetch_array($p2res);
+            $p2 = $fetch2['id'];
+                if($p2 != $p1){
+                    mysql_query("INSERT INTO msg(text,usr_id,new,dt)
+                                VALUES(
+                                '".$_POST['fname']." ".$_POST['lname']." registered an account.',
+                                '".$p2."',
+                                0,
+                                now()
+                                )");
+                }
+        }
+
         mysql_query("INSERT INTO members(fname,lname,usr,pass,email,regIP,dt,acc,assign,sub,class_id,class_id2)
                         VALUES(
                             '".nameize($_POST['fname'])."',
@@ -111,45 +137,10 @@ else if($_POST['submit']=='Register')
                             now(),
                             4,
                             1,
-                            '".$_POST['sub']."',
+                            '".$p1."',
                             '".$_POST['class']."',
                             '".$_POST['class2']."'
                         )");
-                        
-        $p1qry = 'SELECT name, parent1 FROM class LEFT JOIN members ON members.id = class.parent1 WHERE class_id = '.$_POST['class'].' LIMIT 1';
-        $p1res = mysql_query($p1qry);
-        $p1rows = mysql_num_rows($p1res);
-        
-        $p1 = '';
-        $p2 = '';
-        
-        if($p1rows == 0){
-            $p1 = '11';
-        }
-        
-        $p2qry = 'SELECT name, parent2 FROM class LEFT JOIN members ON members.id = class.parent2 WHERE class_id = '.$_POST['class2'].' LIMIT 1';
-        $p2res = mysql_query($p2qry);
-        $p2rows = mysql_num_rows($p2res);
-
-        mysql_query("INSERT INTO msg(text,usr_id,new,dt)
-                        VALUES(
-                            '".$_POST['fname']." ".$_POST['lname']." registered an account.',
-                            '".$p1."',
-                            1,
-                            now()
-                        )");
-
-        if($p2rows == 0){
-            if($p2 != $p1 and $p2 != 0){
-                mysql_query("INSERT INTO msg(text,usr_id,new,dt)
-                VALUES(
-                '".$_POST['fname']." ".$_POST['lname']." registered an account.',
-                '".$p2."',
-                1,
-                now()
-                )");
-            }
-        }
         
         if(mysql_affected_rows($link)==1)
         {

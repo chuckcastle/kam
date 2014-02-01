@@ -15,7 +15,7 @@
     $total_items = mysql_fetch_array(mysql_query($query));
 
     $targetpage = "solicit.php";
-    $limit = 25;
+    $limit = 20;
     if(isset($_GET['page'])) {
         $page = $_GET['page'];
         $start = ($page - 1) * $limit;
@@ -195,7 +195,7 @@
                         </p>
                         
                         <p class="featured lead">
-                            Don't see a business that you'd like to solicit from?  Send a <a href="manage.php?tab=msg">message</a> to R. Castillo, J. Sorenson, or S. Ervin!
+                            Don't see a business that you'd like to solicit from?  Send a <a href="manage.php#messages">message</a> to R. Castillo, J. Sorenson, or S. Ervin!
                         </p>
 
                         <table class="table table-striped">

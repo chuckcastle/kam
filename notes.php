@@ -105,7 +105,7 @@
                         </div>
                         <div class="span6">
                             <p class="pull-right">
-                                <a href="#addnote" data-toggle="modal"><i class="icon-pencil icon-large"></i><span class="alternative-font">&nbsp;Add Note</span></a>
+                                <a href="#addnote" data-toggle="modal"><i class="icon-pencil icon-2x"></i><span class="alternative-font">&nbsp;Add Note</span></a>
                             </p>    
                         </div> <!-- /span6 -->
                     </div> <!-- /row -->

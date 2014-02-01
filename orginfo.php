@@ -98,7 +98,7 @@
         $res = mysql_query($sql);
 
         $_SESSION['msg']['info']='Right on!  You successfully deleted '.$name.'!';
-        header('Location: manage.php');
+        header('Location: manage.php?tab=org');
     }
 
 //SQL
@@ -147,6 +147,7 @@
                         <div class="span6">
                             <p class="lead">
                             <?php
+                                $where = '';
                                 if($org['avail']==0){
                                     echo '<a rel="tooltip" data-placement="top" data-original-title="'.mb_substr($org['fname'], 0, 1, 'utf-8').'.&nbsp;'.$org['lname'].'"><i class="icon-user"></i></a>';
                                 }
@@ -201,23 +202,23 @@
                                 $where = '';
                                 if($access == 4){
                                     if($org['usr_id']==$usrid || $org['usr_id']==0) {
-                                        $where = ' WHERE id = '.$usrid;
+                                        echo '<a rel="tooltip" data-placement="top" href="#assign" data-original-title="Update user assignment" data-toggle="modal"><i class="icon-group icon-2x"></i>&nbsp;</a>';
+                                        $where = ' WHERE members.id = '.$usrid;
                                     }
                                 }
-                                echo '<a rel="tooltip" data-placement="top" href="#assign" data-original-title="Update user assignment" data-toggle="modal"><i class="icon-group icon-large"></i>&nbsp;</a>';
 
                                 //only show if user access level is 3 - manager, 2 - admin, or 1 - root
                                 if($access <= 3){
                             ?>
-                                <a rel="tooltip" data-placement="top" href="#edit" data-original-title="Edit details" data-toggle="modal"><i class="icon-gear icon-large"></i>&nbsp;</a>
-                                
-                                <a rel="tooltip" data-placement="top" href="items.php?orgid=<?=$orgid;?>" data-original-title="Items" data-toggle="modal"><i class="icon-tag icon-large"></i>&nbsp;</a>
+                                <a rel="tooltip" data-placement="top" href="#assign" data-original-title="Update user assignment" data-toggle="modal"><i class="icon-group icon-2x"></i>&nbsp;</a>                            
+                                <a rel="tooltip" data-placement="top" href="#edit" data-original-title="Edit details" data-toggle="modal"><i class="icon-gear icon-2x"></i>&nbsp;</a>                                
+                                <a rel="tooltip" data-placement="top" href="items.php?orgid=<?=$orgid;?>" data-original-title="Items" data-toggle="modal"><i class="icon-tag icon-2x"></i>&nbsp;</a>
                             <?php
                                 }
                             ?>
-                                <a rel="tooltip" data-placement="top" href="notes.php?orgid=<?=$orgid;?>" data-original-title="Notes"><i class="icon-edit icon-large"></i>&nbsp;</a>
+                                <a rel="tooltip" data-placement="top" href="notes.php?orgid=<?=$orgid;?>" data-original-title="Notes"><i class="icon-edit icon-2x"></i>&nbsp;</a>
 
-                                <a rel="tooltip" data-placement="top" href="#share" data-original-title="Share info" data-toggle="modal"><i class="icon-share icon-large"></i>&nbsp;</a>
+                                <a rel="tooltip" data-placement="top" href="#share" data-original-title="Share info" data-toggle="modal"><i class="icon-share icon-2x"></i>&nbsp;</a>
 
                             </p> <!-- /icons -->
                         </div> <!-- /icons span3 -->
@@ -274,7 +275,7 @@
                         <select name="userid" class="span3">
                             <option value="0">Select User:</option>
                             <option value="0"></option>
-                            <?php 
+                            <?php
                                 $sql = 'SELECT * FROM members'.$where.' ORDER BY fname ASC';
                                 $res = mysql_query($sql);
                                 while($sub = mysql_fetch_array($res)) { 

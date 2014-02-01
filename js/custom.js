@@ -23,6 +23,7 @@ $(document).ready(function() {
     });
 });
 
+<<<<<<< HEAD
 
 // Include the UserVoice JavaScript SDK (only needed once on a page)
 UserVoice=window.UserVoice||[];(function(){var uv=document.createElement('script');uv.type='text/javascript';uv.async=true;uv.src='//widget.uservoice.com/3iiitXpOtjC2WgNvfnKxUg.js';var s=document.getElementsByTagName('script')[0];s.parentNode.insertBefore(uv,s)})();
@@ -65,3 +66,15 @@ UserVoice.push(['addTrigger', { mode: 'contact', trigger_position: 'top-right' }
 
 // Autoprompt for Satisfaction and SmartVote (only displayed under certain conditions)
 UserVoice.push(['autoprompt', {}]);
+=======
+// Javascript to enable link to tab
+var url = document.location.toString();
+if (url.match('#')) {
+    $('.nav-tabs a[href=#'+url.split('#')[1]+']').tab('show') ;
+} 
+
+// Change hash for page-reload
+$('.nav-tabs a').on('shown', function (e) {
+    window.location.hash = e.target.hash;
+});
+>>>>>>> c0b62a9198eb2b45f95163e18ad392c2ccd90c70

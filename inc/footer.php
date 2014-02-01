@@ -35,24 +35,14 @@
         <script>window.jQuery || document.write('<script src="vendor/jquery.js"><\/script>')</script>
         <script src="vendor/jquery.easing.js"></script>
         <script src="vendor/jquery.appear.js"></script>
-        <script src="vendor/jquery.cookie.js"></script>
         <script src="vendor/bootstrap.js"></script>
         <script src="vendor/selectnav.js"></script>
-        <script src="vendor/twitterjs/twitter.js"></script>
         <script src="vendor/jquery.tablesorter.js"></script>
         <script src="vendor/jquery.tablecloth.js"></script>
-        <script src="vendor/revolution-slider/js/jquery.themepunch.plugins.js"></script>
-        <script src="vendor/revolution-slider/js/jquery.themepunch.revolution.js"></script>
-        <script src="vendor/flexslider/jquery.flexslider.js"></script>
-        <script src="vendor/circle-flip-slideshow/js/jquery.flipshow.js"></script>
         <script src="vendor/magnific-popup/magnific-popup.js"></script>
         <script src="vendor/jquery.validate.js"></script>
-        <script src="vendor/simple-pagination/simple-pagination.js"></script>
         
         <script src="js/plugins.js"></script>
-        
-        <!-- Current Page Scripts -->
-        <script src="js/views/view.home.js"></script>
         
         <!-- Theme Initializer -->
         <script src="js/theme.js"></script>

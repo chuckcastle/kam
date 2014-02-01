@@ -17,29 +17,6 @@
     $usrid = $_SESSION['id'];
     $usr = $_SESSION['usr'];
     $access = $_SESSION['acc'];
-    $orgtab = '';
-    $minetab = '';
-    $acctab = '';
-    $msgtab = '';
-    
-    if(isset($_GET['tab'])){
-        switch($_GET['tab']){
-            case "org":
-                $orgtab = 'active';
-                break;
-            case "mine":
-                $minetab = 'active';
-                break;
-            case "acc":
-                $acctab = 'active';
-                break;
-            case "msg":
-                $msgtab = 'active';
-                break;
-            default:
-                $orgtab = 'active';
-        }
-    }
     
 //POST
 
@@ -102,6 +79,7 @@
         $fname = val($_POST['fname']);
         $lname = val($_POST['lname']);
         $email = val($_POST['email']);
+        $opt_out = val($_POST['opt_out']);
 
         $updqry = 'SELECT * FROM members WHERE id = '.$id;
         $updres = mysql_query($updqry);
@@ -128,7 +106,7 @@
             $assign = val($_POST['assign']);
         }
    
-        $sql = 'UPDATE members SET fname="'.nameize($fname).'", lname="'.nameize($lname).'", email="'.$email.'", acc="'.$acc.'", assign="'.$assign.'", class_id = "'.$class_id.'", class_id2 = "'.$class_id2.'" WHERE members.id='.$id.' LIMIT 1';
+        $sql = 'UPDATE members SET fname="'.nameize($fname).'", lname="'.nameize($lname).'", email="'.$email.'", acc="'.$acc.'", assign="'.$assign.'", class_id = "'.$class_id.'", class_id2 = "'.$class_id2.'", opt_out = "'.$opt_out.'" WHERE members.id='.$id.' LIMIT 1';
         $res = mysql_query($sql);
 
         $_SESSION['msg']['success']='Right on!  You just updated '.$user['usr'].'!';
@@ -158,26 +136,133 @@
 
     //select proper info from org table
     if($access >=3){
-        $where = ' WHERE donate <> 2';
+        $orgwhere = ' WHERE donate <> 2';
     } else {
-        $where = '';
+        $orgwhere = '';
     }
-    $orgqry = 'SELECT * FROM org'.$where.' ORDER BY name ASC';
+    $orgqry = 'SELECT * FROM org'.$orgwhere.' ORDER BY name ASC';
     $orgres = mysql_query($orgqry);
+    
+    //pagination
+    $adjacents = 5;
+    $query = 'SELECT COUNT(*) FROM org'.$orgwhere;
+    $total_items = mysql_fetch_array(mysql_query($query));
+
+    $targetpage = "manage.php";
+    $limit = 20;
+    if(isset($_GET['page'])) {
+        $page = $_GET['page'];
+        $start = ($page - 1) * $limit;
+    } else {
+        $page = 0;
+        $start = 0;
+    }
+
+    //get data
+    $getdata = 'SELECT * FROM org'.$orgwhere.' LIMIT '.$start.', '.$limit;
+    $result = mysql_query($getdata);
+
+    //setup page vars for display
+    if ($page == 0) $page = 1;
+    $prev = $page - 1;
+    $next = $page + 1;
+    $lastpage = ceil($total_items[0]/$limit);
+    $lpm1 = $lastpage - 1;
+
+    $pagination = "";
+    if($lastpage > 1) { 
+        $pagination .= '<div class="pagination pagination-center"><ul>';
+        
+        //previous button
+        if ($page > 1) {
+            $pagination .= '<li><a href="'.$targetpage.'?page='.$prev.'">&laquo;</a></li>';
+        } else {
+            $pagination .= '<li class="disabled"><a href="#">&laquo;</a></li>';
+        }
+        
+        //pages 
+        if ($lastpage < 7 + ($adjacents * 2)) /* not enough pages to bother breaking it up */ { 
+            for ($counter = 1; $counter <= $lastpage; $counter++) {
+                if ($counter == $page) {
+                    $pagination .= '<li class="active"><a href="#">'.$counter.'</a></li>';
+                } else {
+                    $pagination .= '<li><a href="'.$targetpage.'?page='.$counter.'">'.$counter.'</a></li>';
+                }
+            }
+        } elseif($lastpage > 5 + ($adjacents * 2))  /* enough pages to hide some */ {
+            //close to beginning; only hide later pages
+            if($page < 1 + ($adjacents * 2)) {
+                for ($counter = 1; $counter < 4 + ($adjacents * 2); $counter++) {
+                    if ($counter == $page) {
+                        $pagination .= '<li class="active"><a href="#">'.$counter.'</a></li>';
+                    } else {
+                        $pagination .= '<li><a href="'.$targetpage.'?page='.$counter.'">'.$counter.'</a></li>';
+                    }
+                }
+                
+                $pagination .= '<li><a href="#">...</a></li>';
+                $pagination .= '<li><a href="'.$targetpage.'?page='.$lpm1.'">'.$lpm1.'</a></li>';
+                $pagination .= '<li><a href="'.$targetpage.'?page='.$lastpage.'">'.$lastpage.'</a></li>';   
+            }
+        
+            //in middle; hide some front and some back
+            elseif($lastpage - ($adjacents * 2) > $page && $page > ($adjacents * 2)) {
+                $pagination .= '<li><a href="'.$targetpage.'?page=1">1</a></li>';
+                $pagination .= '<li><a href="'.$targetpage.'?page=2">2</a></li>';
+                $pagination .= '<li><a href="#">...</a></li>';
+            
+                for ($counter = $page - $adjacents; $counter <= $page + $adjacents; $counter++) {
+                    if ($counter == $page) {
+                        $pagination .= '<li class="active"><a href="#">'.$counter.'</a></li>';
+                    } else {
+                        $pagination .= '<li><a href="'.$targetpage.'?page='.$counter.'">'.$counter.'</a></li>';
+                    }
+                }
+            
+                $pagination .= '<a href="#">...</a>';
+                $pagination .= '<li><a href="'.$targetpage.'?page='.$lpm1.'">'.$lpm1.'</a></li>';
+                $pagination .= '<li><a href="'.$targetpage.'?page='.$lastpage.'">'.$lastpage.'</a></li>';   
+            }
+        
+            //close to end; only hide early pages
+            else {
+                $pagination .= '<li><a href="'.$targetpage.'?page=1">1</a></li>';
+                $pagination .= '<li><a href="'.$targetpage.'?page=2">2</a></li>';
+                $pagination .= '<li><a href="#">...</a></li>';
+            
+                for ($counter = $lastpage - (2 + ($adjacents * 2)); $counter <= $lastpage; $counter++) {
+                    if ($counter == $page) {
+                        $pagination .= '<li class="active"><a href="#">'.$counter.'</a></li>';
+                    } else {
+                        $pagination .= '<li><a href="'.$targetpage.'?page='.$counter.'">'.$counter.'</a></li>';
+                    }
+                }
+            }
+        } //pages
+    
+        //next button
+        if ($page < $counter - 1) {
+            $pagination .= '<li><a href="'.$targetpage.'?page='.$next.'">&raquo;</a></li>';
+        } else {
+            $pagination .= '<li class="disabled"><a href="#">&raquo;</a></li>';
+        }
+
+        $pagination .= '</ul></div>';   
+    } //$lastpage > 1
 
     //select proper info from members table
     switch($access){
-        case 4:
-            $where = ' WHERE id = '.$usrid;
-            break;
-        case 3:
+        case 3: //manager
             $where = ' WHERE id = '.$usrid.' OR sub = '.$usrid;
             break;
-        case 2:
-            $where = ' WHERE acc NOT LIKE 1 AND sub NOT LIKE 11';
+        case 2: //administrator
+            $where = ' WHERE acc > 1 AND sub NOT LIKE 11';
             break;
-        default:
+        case 1: //root
             $where = '';
+            break;
+        default: //everyone else
+            $where = ' WHERE id = '.$usrid;
     }
     $usrqry = 'SELECT * FROM members'.$where.' ORDER BY usr ASC';
     $usrres = mysql_query($usrqry);
@@ -212,16 +297,16 @@
 
                             <div class="tabs">
                                 <ul class="nav nav-tabs">
-                                    <li class="<?php echo $orgtab; ?>"><a href="#organization" data-toggle="tab"><i class="icon-building"></i> All Organizations (<?=mysql_num_rows($orgres);?>)</a></li>
-                                    <li class="<?php echo $minetab; ?>"><a href="#mine" data-toggle="tab"><i class="icon-user"></i> Assigned to Me (<?=mysql_num_rows($mineres);?>)</a></li>
-                                    <li class="<?php echo $acctab; ?>"><a href="#account" data-toggle="tab"><i class="icon-user"></i> Accounts (<?=mysql_num_rows($usrres);?>)</a></li>
-                                    <li class="<?php echo $msgtab; ?>"><a href="#messages" data-toggle="tab"><i class="icon-comment"></i> Messages (<?=mysql_num_rows($msgres);?>)</a></li>
+                                    <li class="active"><a href="#organization" data-toggle="tab"><i class="icon-building"></i> All Organizations (<?=mysql_num_rows($orgres);?>)</a></li>
+                                    <li><a href="#mine" data-toggle="tab"><i class="icon-user"></i> Assigned to Me (<?=mysql_num_rows($mineres);?>)</a></li>
+                                    <li><a href="#account" data-toggle="tab"><i class="icon-user"></i> Accounts (<?=mysql_num_rows($usrres);?>)</a></li>
+                                    <li><a href="#messages" data-toggle="tab"><i class="icon-comment"></i> Messages (<?=mysql_num_rows($msgres);?>)</a></li>
                                 </ul>
                                 <div class="tab-content">
-                                    <div class="tab-pane <?php echo $orgtab; ?>" id="organization">
+                                    <div class="tab-pane active" id="organization">
                                     <?php
                                         //only show if user access level is 3 - manager, 2 - admin, or 1 - root
-                                        if($access <= 3){
+                                        if($access < 4){
                                     ?>
                                         <span class="pull-right"><a rel="tooltip" data-placement="top" href="#addorg" data-original-title="Add Organization" data-toggle="modal"><i class="icon-plus"></i><span class="alternative-font">&nbsp;Add Organization</span></a></span>
                                             <div id="addorg" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="addorgLabel" aria-hidden="true">
@@ -266,7 +351,10 @@
                                                 </form>
                                             </div> <!-- /modal-footer -->
                                         </div> <!-- /addorg modal -->
-                                        <?php } ?>
+                                        <?php
+                                            } 
+                                        echo $pagination;
+                                        ?>
 
                                         <table class="table table-striped">
                                             <thead>
@@ -279,7 +367,7 @@
                                             
                                             <tbody>
                                                 <?php
-                                                    while($row = mysql_fetch_array($orgres)) {
+                                                    while($row = mysql_fetch_array($result)) {
                                                         $ntqry = 'SELECT * FROM notes WHERE org_id = '.$row['id'].' ORDER BY dt DESC';
                                                         $ntres = mysql_query($ntqry);
                                                         $note = mysql_fetch_array($ntres);
@@ -308,15 +396,18 @@
                                                         echo '    <td>'.$row['poc_name'].'</td>';
                                                         echo '    <td>'.$row['poc_phone'].'</td>';
                                                         echo '    <td>'.$row['poc_email'].'</td>';
-                                                        echo '    <td><a rel="tooltip" data-placement="top" href="notes.php?orgid='.$row['id'].'" data-original-title="Goto notes"><i class="icon-edit icon-large"></i>&nbsp;</a><a rel="tooltip" data-placement="top" data-original-title="'.$note['note'].'"><span class="badge '.$badge.'">'.$notes.'</span></a></td>';
+                                                        echo '    <td><a rel="tooltip" data-placement="top" href="notes.php?orgid='.$row['id'].'" data-original-title="'.$note['note'].'"><span class="badge '.$badge.'">'.$notes.'</span></a></td>';
                                                         echo '</tr>';
                                                     }
                                                 ?>
                                             </tbody>
                                         </table>
+                                        <?php
+                                            echo $pagination;
+                                        ?>
                                     </div> <!-- /tab-pane organization -->
                                     
-                                    <div class="tab-pane <?php echo $minetab; ?>" id="mine">
+                                    <div class="tab-pane" id="mine">
                                         <table class="table table-striped">
                                             <thead>
                                                 <th>Organization</th>
@@ -354,7 +445,7 @@
                                                         echo '    <td>'.$row['poc_name'].'</td>';
                                                         echo '    <td>'.$row['poc_phone'].'</td>';
                                                         echo '    <td>'.$row['poc_email'].'</td>';
-                                                        echo '    <td><a rel="tooltip" data-placement="top" href="notes.php?orgid='.$row['id'].'" data-original-title="Goto notes"><i class="icon-edit icon-large"></i>&nbsp;</a><a rel="tooltip" data-placement="top" data-original-title="'.$note['note'].'"><span class="badge '.$badge.'">'.$notes.'</span></a></td>';
+                                                        echo '    <td><a rel="tooltip" data-placement="top" href="notes.php?orgid='.$row['id'].'" data-original-title="'.$note['note'].'"><span class="badge '.$badge.'">'.$notes.'</span></a></td>';
                                                         echo '</tr>';
                                                     }
                                                 ?>
@@ -362,7 +453,7 @@
                                         </table>
                                     </div> <!-- /tab-pane mine -->
                                     
-                                    <div class="tab-pane <?php echo $acctab; ?>" id="account">
+                                    <div class="tab-pane" id="account">
                                         <table class="table table-striped">
                                             <thead>
                                                 <th>Username</th>
@@ -476,6 +567,11 @@
                                                                             <option value="0"<? if($row['assign']==0){echo ' selected';}?>>No</option>
                                                                             <option value="1"<? if($row['assign']==1){echo ' selected';}?>>Yes</option>
                                                                         </select>
+                                                                    <label class="span3">Receive Emails from KAM?</label>
+                                                                        <select name="opt_out"  class="span3">
+                                                                            <option value="0"<? if($row['opt_out']==0){echo ' selected';}?>>Yes</option>
+                                                                            <option value="1"<? if($row['opt_out']==1){echo ' selected';}?>>No</option>
+                                                                        </select>
                                                                 <?php endif; ?>
                                                             </div> <!-- /modal-body -->
 
@@ -519,7 +615,7 @@
                                         </table>
                                     </div> <!-- /tab-pane account -->
                                     
-                                    <div class="tab-pane <?php echo $msgtab; ?>" id="messages">
+                                    <div class="tab-pane" id="messages">
                                         <span class="pull-right"><a rel="tooltip" data-placement="top" href="#addmsg" data-original-title="Send Note" data-toggle="modal"><i class="icon-comment"></i><span class="alternative-font">&nbsp;Send Message</span></a></span>
                                             <div id="addmsg" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="addmsgLabel" aria-hidden="true">
 
@@ -571,9 +667,9 @@
                                                         }
                                                         echo '    <td>'.$row['dt'].'</td>';
                                                         if($row['new'] == 0) {
-                                                            echo '    <td><i class="icon-thumbs-up icon-large" onclick="document.markread'.$d.'.submit();"></i>&nbsp;<i class="icon-remove icon-large" onclick="document.delmsg'.$d.'.submit();"></i></td>';
+                                                            echo '    <td><i class="icon-thumbs-up icon-2x" onclick="document.markread'.$d.'.submit();"></i>&nbsp;<i class="icon-remove icon-2x" onclick="document.delmsg'.$d.'.submit();"></i></td>';
                                                         } else {
-                                                            echo '    <td><i class="icon-remove icon-large" onclick="document.delmsg'.$d.'.submit();"></i></td>';
+                                                            echo '    <td><i class="icon-remove icon-2x" onclick="document.delmsg'.$d.'.submit();"></i></td>';
                                                         }
                                                         echo '</tr>';
                                                         
@@ -593,5 +689,6 @@
             </div> <!-- /main -->
             
 <?php
+//include html footer
     include('inc/footer.php');
 ?>
