@@ -1,23 +1,23 @@
 <?php
 //smoke and mirrors
     include('inc/head.php');
-    
+
 // LOGIN/PAGE ACCESS CHECK
 
     //if not logged in
     if(!isset($_SESSION['id'])) {
         $_SESSION['msg']['error']='Uhm... you\'ve gotta be logged in to do that...';
-        
+
         header("Location: index.php");
         exit;
     }
-        
+
 //set variables
     $orgid = $_GET['orgid'];
     $usrid = $_SESSION['id'];
     $usr = $_SESSION['usr'];
     $access = $_SESSION['acc'];
-    
+
 //POST
 
     //if submit add
@@ -34,14 +34,14 @@
             $poc_email = val($_POST['poc_email']);
             $poc_phone = val(preg_replace("/[^0-9]/","", $_POST['poc_phone']));
             $addedby = $usrid;
-            
+
             $sql = 'INSERT INTO org (id, name, cat_id, url, avail, org.desc, poc_name, poc_title, poc_email, poc_phone, dt, addedby) VALUES (NULL, "'.nameize($name).'", '.$catid.', "'.$url.'", 1, "'.sentence_case($desc).'", "'.nameize($poc_name).'", "'.$poc_title.'", "'.$poc_email.'", "'.formatphone($poc_phone).'", now(), "'.$addedby.'")';
             $res = mysql_query($sql);
-            
+
             $_SESSION['msg']['success']='Sweet! New organization added!';
         }
     }
-    
+
     //if submit markread
     if(isset($_POST['mark'])) {
         $id = $_POST['mark'];
@@ -61,7 +61,7 @@
 
         $_SESSION['msg']['success']='Buh-Bye! Notification deleted!';
     }
-    
+
     //if submit send
     if($_POST['submit']=='Send') {
         $usr_id = val($_POST['usr_id']);
@@ -72,7 +72,7 @@
 
         $_SESSION['msg']['success']='Lookie you!  Message sent!';
     }
-    
+
     //if submit updusr
     if($_POST['submit']=='Update') {
         $id = val($_POST['usrid']);
@@ -84,7 +84,7 @@
         $updqry = 'SELECT * FROM members WHERE id = '.$id;
         $updres = mysql_query($updqry);
         $user = mysql_fetch_array($updres);
-        
+
         if(!isset($_POST['acc'])){
             $acc = $user['acc'];
         } else {
@@ -105,7 +105,7 @@
         } else {
             $assign = val($_POST['assign']);
         }
-   
+
         $sql = 'UPDATE members SET fname="'.nameize($fname).'", lname="'.nameize($lname).'", email="'.$email.'", acc="'.$acc.'", assign="'.$assign.'", class_id = "'.$class_id.'", class_id2 = "'.$class_id2.'", opt_out = "'.$opt_out.'" WHERE members.id='.$id.' LIMIT 1';
         $res = mysql_query($sql);
 
@@ -123,7 +123,7 @@
 
         $_SESSION['msg']['info']='Right on!  You successfully deleted the user!';
     }
-        
+
 //SQL
 
     //select proper info from msg table
@@ -142,7 +142,7 @@
     }
     $orgqry = 'SELECT * FROM org'.$orgwhere.' ORDER BY name ASC';
     $orgres = mysql_query($orgqry);
-    
+
     //pagination
     $adjacents = 5;
     $query = 'SELECT COUNT(*) FROM org'.$orgwhere;
@@ -170,18 +170,18 @@
     $lpm1 = $lastpage - 1;
 
     $pagination = "";
-    if($lastpage > 1) { 
+    if($lastpage > 1) {
         $pagination .= '<div class="pagination pagination-center"><ul>';
-        
+
         //previous button
         if ($page > 1) {
             $pagination .= '<li><a href="'.$targetpage.'?page='.$prev.'">&laquo;</a></li>';
         } else {
             $pagination .= '<li class="disabled"><a href="#">&laquo;</a></li>';
         }
-        
-        //pages 
-        if ($lastpage < 7 + ($adjacents * 2)) /* not enough pages to bother breaking it up */ { 
+
+        //pages
+        if ($lastpage < 7 + ($adjacents * 2)) /* not enough pages to bother breaking it up */ {
             for ($counter = 1; $counter <= $lastpage; $counter++) {
                 if ($counter == $page) {
                     $pagination .= '<li class="active"><a href="#">'.$counter.'</a></li>';
@@ -199,18 +199,18 @@
                         $pagination .= '<li><a href="'.$targetpage.'?page='.$counter.'">'.$counter.'</a></li>';
                     }
                 }
-                
+
                 $pagination .= '<li><a href="#">...</a></li>';
                 $pagination .= '<li><a href="'.$targetpage.'?page='.$lpm1.'">'.$lpm1.'</a></li>';
-                $pagination .= '<li><a href="'.$targetpage.'?page='.$lastpage.'">'.$lastpage.'</a></li>';   
+                $pagination .= '<li><a href="'.$targetpage.'?page='.$lastpage.'">'.$lastpage.'</a></li>';
             }
-        
+
             //in middle; hide some front and some back
             elseif($lastpage - ($adjacents * 2) > $page && $page > ($adjacents * 2)) {
                 $pagination .= '<li><a href="'.$targetpage.'?page=1">1</a></li>';
                 $pagination .= '<li><a href="'.$targetpage.'?page=2">2</a></li>';
                 $pagination .= '<li><a href="#">...</a></li>';
-            
+
                 for ($counter = $page - $adjacents; $counter <= $page + $adjacents; $counter++) {
                     if ($counter == $page) {
                         $pagination .= '<li class="active"><a href="#">'.$counter.'</a></li>';
@@ -218,18 +218,18 @@
                         $pagination .= '<li><a href="'.$targetpage.'?page='.$counter.'">'.$counter.'</a></li>';
                     }
                 }
-            
+
                 $pagination .= '<a href="#">...</a>';
                 $pagination .= '<li><a href="'.$targetpage.'?page='.$lpm1.'">'.$lpm1.'</a></li>';
-                $pagination .= '<li><a href="'.$targetpage.'?page='.$lastpage.'">'.$lastpage.'</a></li>';   
+                $pagination .= '<li><a href="'.$targetpage.'?page='.$lastpage.'">'.$lastpage.'</a></li>';
             }
-        
+
             //close to end; only hide early pages
             else {
                 $pagination .= '<li><a href="'.$targetpage.'?page=1">1</a></li>';
                 $pagination .= '<li><a href="'.$targetpage.'?page=2">2</a></li>';
                 $pagination .= '<li><a href="#">...</a></li>';
-            
+
                 for ($counter = $lastpage - (2 + ($adjacents * 2)); $counter <= $lastpage; $counter++) {
                     if ($counter == $page) {
                         $pagination .= '<li class="active"><a href="#">'.$counter.'</a></li>';
@@ -239,7 +239,7 @@
                 }
             }
         } //pages
-    
+
         //next button
         if ($page < $counter - 1) {
             $pagination .= '<li><a href="'.$targetpage.'?page='.$next.'">&raquo;</a></li>';
@@ -247,7 +247,7 @@
             $pagination .= '<li class="disabled"><a href="#">&raquo;</a></li>';
         }
 
-        $pagination .= '</ul></div>';   
+        $pagination .= '</ul></div>';
     } //$lastpage > 1
 
     //select proper info from members table
@@ -256,7 +256,7 @@
             $where = ' WHERE id = '.$usrid.' OR sub = '.$usrid;
             break;
         case 2: //administrator
-            $where = ' WHERE acc > 1 AND sub NOT LIKE 11';
+            $where = ' WHERE id > 10 AND id <> 15 AND id <> 37 AND acc > 1';
             break;
         case 1: //root
             $where = '';
@@ -264,7 +264,7 @@
         default: //everyone else
             $where = ' WHERE id = '.$usrid;
     }
-    $usrqry = 'SELECT * FROM members'.$where.' ORDER BY usr ASC';
+    $usrqry = 'SELECT * FROM members'.$where.' ORDER BY fname ASC';
     $usrres = mysql_query($usrqry);
 
 //include html header
@@ -328,7 +328,7 @@
                                                                 $sql = 'SELECT * FROM cat ORDER BY title ASC';
                                                                 $res = mysql_query($sql);
                                                                 while($cat = mysql_fetch_array($res)) {
-                                                                    echo '<option value="'.$cat['id'].'">'.$cat['title'].'</option>';    
+                                                                    echo '<option value="'.$cat['id'].'">'.$cat['title'].'</option>';
                                                                 }
                                                             ?>
                                                         </select>
@@ -352,7 +352,7 @@
                                             </div> <!-- /modal-footer -->
                                         </div> <!-- /addorg modal -->
                                         <?php
-                                            } 
+                                            }
                                         echo $pagination;
                                         ?>
 
@@ -364,7 +364,7 @@
                                                 <th>Email</th>
                                                 <th>Notes</th>
                                             </thead>
-                                            
+
                                             <tbody>
                                                 <?php
                                                     while($row = mysql_fetch_array($result)) {
@@ -406,7 +406,7 @@
                                             echo $pagination;
                                         ?>
                                     </div> <!-- /tab-pane organization -->
-                                    
+
                                     <div class="tab-pane" id="mine">
                                         <table class="table table-striped">
                                             <thead>
@@ -416,7 +416,7 @@
                                                 <th>Email</th>
                                                 <th>Notes</th>
                                             </thead>
-                                            
+
                                             <tbody>
                                                 <?php
                                                     while($row = mysql_fetch_array($mineres)) {
@@ -452,7 +452,7 @@
                                             </tbody>
                                         </table>
                                     </div> <!-- /tab-pane mine -->
-                                    
+
                                     <div class="tab-pane" id="account">
                                         <table class="table table-striped">
                                             <thead>
@@ -488,7 +488,7 @@
                                                             </div> <!-- /modal-header -->
 
                                                             <div class="modal-body">
-                                                                <form action="" method="post">                                            
+                                                                <form action="" method="post">
                                                                     <label class="span3">First Name:</label>
                                                                     <input type="text" name="fname" value="<?=$row['fname'];?>" maxlength="30" class="span3">
                                                                     <label class="span3">Last Name:</label>
@@ -534,10 +534,10 @@
                                                                     <select name="classid" class="span3">
                                                                         <option value="">Select Classroom:</option>
                                                                         <option value=""></option>
-                                                                        <?php 
+                                                                        <?php
                                                                             $sql = 'SELECT * FROM class';
                                                                             $res = mysql_query($sql);
-                                                                            while($sub = mysql_fetch_array($res)) { 
+                                                                            while($sub = mysql_fetch_array($res)) {
                                                                                 $c1 = '';
                                                                                 if($row['class_id'] == $sub['id']) {
                                                                                     $c1 = 'selected';
@@ -550,10 +550,10 @@
                                                                     <select name="classid2" class="span3">
                                                                         <option value="">Select Classroom:</option>
                                                                         <option value=""></option>
-                                                                        <?php 
+                                                                        <?php
                                                                             $sql2 = 'SELECT * FROM class';
                                                                             $res2 = mysql_query($sql2);
-                                                                            while($sub2 = mysql_fetch_array($res2)) { 
+                                                                            while($sub2 = mysql_fetch_array($res2)) {
                                                                                 $c2 = '';
                                                                                 if($row['class_id2'] == $sub2['id']) {
                                                                                     $c2 = 'selected';
@@ -579,14 +579,14 @@
                                                                     <input type="hidden" name="usrid" value="<?=$row['id'];?>">
                                                                     <input type="submit" name="submit" value="Update" class="btn btn-primary">
                                                                     <?php
-                                                                        if($access == 1){ 
+                                                                        if($access == 1){
                                                                             echo '<input type="submit" name="submit" value="Delete" class="btn btn-danger">';
                                                                         }
                                                                     ?>
                                                                 </form>
                                                             </div> <!-- /modal-footer -->
                                                         </div> <!-- /edituser -->
-                                                        
+
                                                     <!-- usrorgs modal -->
                                                         <div id="usrorgs<?=$a;?>" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="usrorgs<?=$a;?>Label" aria-hidden="true">
                                                             <div class="modal-header">
@@ -595,7 +595,7 @@
                                                             </div> <!-- /modal-header -->
 
                                                             <div class="modal-body">
-                                                                <p>                            
+                                                                <p>
                                                                 <?php
                                                                     while($orgs = mysql_fetch_array($asnres)) {
                                                                         echo '<a href="orginfo.php?orgid='.$orgs['orgid'].'">'.$orgs['name'].'</a><br />';
@@ -614,7 +614,7 @@
                                             </tbody>
                                         </table>
                                     </div> <!-- /tab-pane account -->
-                                    
+
                                     <div class="tab-pane" id="messages">
                                         <span class="pull-right"><a rel="tooltip" data-placement="top" href="#addmsg" data-original-title="Send Note" data-toggle="modal"><i class="icon-comment"></i><span class="alternative-font">&nbsp;Send Message</span></a></span>
                                             <div id="addmsg" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="addmsgLabel" aria-hidden="true">
@@ -630,10 +630,10 @@
                                                     <select name="usr_id" class="span3">
                                                         <option value="">Select user:</option>
                                                         <option value=""></option>
-                                                        <?php 
+                                                        <?php
                                                             $sql = 'SELECT * FROM members WHERE usr NOT LIKE "root" AND sub <> 11 AND id <> '.$usrid.' ORDER BY fname ASC';
                                                             $res = mysql_query($sql);
-                                                            while($row = mysql_fetch_array($res)) { 
+                                                            while($row = mysql_fetch_array($res)) {
                                                                 echo '<option value="'.$row['id'].'">'.mb_substr($row['fname'], 0, 1, 'utf-8').'.&nbsp;'.$row['lname'].'</option>';
                                                             }
                                                         ?>
@@ -672,7 +672,7 @@
                                                             echo '    <td><i class="icon-remove icon-2x" onclick="document.delmsg'.$d.'.submit();"></i></td>';
                                                         }
                                                         echo '</tr>';
-                                                        
+
                                                         echo '<form name="markread'.$d.'" action="" method="post"><input type="hidden" name="mark" value="'.$row['id'].'"></form>';
                                                         echo '<form name="delmsg'.$d.'" action="" method="post"><input type="hidden" name="del" value="'.$row['id'].'"></form>';
                                                     }
@@ -687,7 +687,7 @@
                     </div> <!-- /row -->
                 </div> <!-- /container -->
             </div> <!-- /main -->
-            
+
 <?php
 //include html footer
     include('inc/footer.php');
