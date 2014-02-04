@@ -31,14 +31,14 @@ if($_POST['submit']=='Login')
         $_POST['username'] = mysql_real_escape_string($_POST['username']);
         $_POST['password'] = mysql_real_escape_string($_POST['password']);
 
-        $row = mysql_fetch_assoc(mysql_query("SELECT id,usr,acc FROM members WHERE usr='{$_POST['username']}' AND pass='".md5($_POST['password'])."'"));
+        $row = mysql_fetch_assoc(mysql_query("SELECT id,usr,acc FROM members WHERE usr='".$_POST['username']."' AND pass='".md5($_POST['password'])."'"));
 
         if($row['usr'])
         {
             $_SESSION['usr'] = $row['usr'];
             $_SESSION['id'] = $row['id'];
             $_SESSION['acc'] = $row['acc'];
-            $_SESSION['username'] = $_SESSION['usr'];
+            $_SESSION['username'] = $row['usr'];
 
             $_SESSION['msg']['success']='Hey! You\'re now logged in as '.$_SESSION['usr'];
 

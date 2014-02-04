@@ -126,14 +126,13 @@
     </ul>
 </div>
 
-
-        <div id="main_container">
         <div id="chatbox">
             <a id="simple-menu" href="#sidr"><i class="icon-comment icon-2x"></i></a>
         </div>
 <?php
     }
 ?>
+        <div id="main_container">
         <div class="body">
             <header>
                 <div class="container">
