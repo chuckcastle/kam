@@ -111,6 +111,7 @@
             echo '</div>';
         }
 
+    if(isset($_SESSION['id'])){
     ?>
 
 <div id="sidr">
@@ -130,7 +131,9 @@
         <div id="chatbox">
             <a id="simple-menu" href="#sidr"><i class="icon-comment icon-2x"></i></a>
         </div>
-
+<?php
+    }
+?>
         <div class="body">
             <header>
                 <div class="container">
