@@ -15,7 +15,7 @@
                                     <ul>
                                         <li><a href="index.php">Home</a></li>
                                         <?php
-                                            if(isset($_SESSION['id'])) { 
+                                            if(isset($_SESSION['id'])) {
                                                 echo '<li><a href="index.php?logoff">Logout</a></li>';
                                             } else {
                                                 echo '<li><a href="#login" data-toggle="modal">Login</a></li>';
@@ -29,10 +29,10 @@
                 </div>
             </footer>
         </div>
-        
+        </div>
+
         <!-- Libs -->
-        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-        <script>window.jQuery || document.write('<script src="vendor/jquery.js"><\/script>')</script>
+        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
         <script src="vendor/jquery.easing.js"></script>
         <script src="vendor/jquery.appear.js"></script>
         <script src="vendor/bootstrap.js"></script>
@@ -41,14 +41,16 @@
         <script src="vendor/jquery.tablecloth.js"></script>
         <script src="vendor/magnific-popup/magnific-popup.js"></script>
         <script src="vendor/jquery.validate.js"></script>
-        
+        <script src="vendor/chat.js"></script>
+        <script src="vendor/jquery.sidr.min.js"></script>
+
         <script src="js/plugins.js"></script>
-        
+
         <!-- Theme Initializer -->
         <script src="js/theme.js"></script>
-        
+
         <!-- Custom JS -->
         <script src="js/custom.js"></script>
-        
+
     </body>
 </html>

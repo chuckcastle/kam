@@ -13,19 +13,19 @@ if(isset($_GET['logoff']))
 {
     $_SESSION = array();
     session_destroy();
-    
+
     header("Location: index.php");
     exit;
 }
 
 //login
 if($_POST['submit']=='Login')
-{    
+{
     $err = array();
-    
+
     if(!$_POST['username'] || !$_POST['password'])
         $err[] = 'Uh oh... You kinda gotta fill all the boxes in :/';
-    
+
     if(!count($err))
     {
         $_POST['username'] = mysql_real_escape_string($_POST['username']);
@@ -35,19 +35,20 @@ if($_POST['submit']=='Login')
 
         if($row['usr'])
         {
-            $_SESSION['usr']=$row['usr'];
+            $_SESSION['usr'] = $row['usr'];
             $_SESSION['id'] = $row['id'];
             $_SESSION['acc'] = $row['acc'];
-            
+            $_SESSION['username'] = $_SESSION['usr'];
+
             $_SESSION['msg']['success']='Hey! You\'re now logged in as '.$_SESSION['usr'];
-            
+
             $dt = date("Y-m-d H:i:s");
-            
+
             mysql_query('UPDATE members SET lastlogin = "'.$dt.'" WHERE id = '.$_SESSION['id'].' LIMIT 1');
         }
         else $err[]='Aw snap! You entered a bad username and/or password :(';
     }
-    
+
     if($err)
     $_SESSION['msg']['error'] = implode('<br />',$err);
 
@@ -57,51 +58,51 @@ if($_POST['submit']=='Login')
 
 //register
 else if($_POST['submit']=='Register')
-{    
+{
     $err = array();
-    
+
     if(strlen($_POST['username'])<4 || strlen($_POST['username'])>12)
     {
         $err[]='Not so fast! Your username\'s gotta be between 4 and 12 characters!';
     }
-    
+
     if($_POST['pass']!=$_POST['vpass'])
     {
         $err[]='Oops!  Passwords don\'t match!';
     }
-    
+
     if(preg_match('/[^a-z0-9\-\_\.]+/i',$_POST['username']))
     {
         $err[]='Whoops! Your username contains invalid characters!';
     }
-    
+
     if(!checkEmail($_POST['email']))
     {
         $err[]='Wait a minute... that\'s not a valid email address...';
     }
-    
+
     if(!count($err))
-    {        
+    {
         $pass = md5($_POST['vpass']);
 
         $_POST['email'] = mysql_real_escape_string($_POST['email']);
         $_POST['username'] = mysql_real_escape_string($_POST['username']);
-                        
+
         $p1qry = 'SELECT members.id, name, parent1 FROM class LEFT JOIN members ON members.id = class.parent1 WHERE class_id = '.$_POST['class'].' LIMIT 1';
         $p1res = mysql_query($p1qry);
         $p1rows = mysql_num_rows($p1res);
-        
+
         $p2qry = 'SELECT members.id, name, parent2 FROM class LEFT JOIN members ON members.id = class.parent2 WHERE class_id = '.$_POST['class2'].' LIMIT 1';
         $p2res = mysql_query($p2qry);
         $p2rows = mysql_num_rows($p2res);
-        
+
         if($p1rows == 0){
             $p1 = '11';
         } else {
             $fetch1 = mysql_fetch_array($p1res);
             $p1 = $fetch1['id'];
         }
-        
+
         mysql_query("INSERT INTO msg(text,usr_id,new,dt)
                         VALUES(
                             '".$_POST['fname']." ".$_POST['lname']." registered an account.',
@@ -109,7 +110,7 @@ else if($_POST['submit']=='Register')
                             0,
                             now()
                         )");
-        
+
         if($p2rows == 0){
             $p2 = '';
         } else {
@@ -141,7 +142,7 @@ else if($_POST['submit']=='Register')
                             '".$_POST['class']."',
                             '".$_POST['class2']."'
                         )");
-        
+
         if(mysql_affected_rows($link)==1)
         {
             send_mail(    'donotreply@kriegercenter.org',
@@ -157,8 +158,8 @@ else if($_POST['submit']=='Register')
     if(count($err))
     {
         $_SESSION['msg']['error'] = implode('<br />',$err);
-    }    
-    
+    }
+
     header("Location: index.php");
     exit;
 }

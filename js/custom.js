@@ -25,3 +25,8 @@ if (url.match('#')) {
 $('.nav-tabs a').on('shown', function(e) {
     window.location.hash = e.target.hash;
 });
+
+/* Sidr */
+$(document).ready(function() {
+    $('#simple-menu').sidr();
+});

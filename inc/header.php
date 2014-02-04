@@ -11,7 +11,7 @@
         <meta name="description" content="UCLA ECE Krieger Auction Manager">
         <meta name="author" content="chuckcastle.me">
 
-        <!-- Mobile Metas 
+        <!-- Mobile Metas
         <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
 
         <!-- Web Fonts  -->
@@ -32,13 +32,25 @@
         <!-- Custom CSS -->
         <link rel="stylesheet" href="css/tablecloth.css">
         <link rel="stylesheet" href="css/bootstrap-tables.css">
+        <link type="text/css" rel="stylesheet" media="all" href="css/chat.css" />
+        <link type="text/css" rel="stylesheet" media="all" href="css/screen.css" />
+        <link rel="stylesheet" href="css/jquery.sidr.dark.css">
+
+        <!--[if lte IE 7]>
+            <link type="text/css" rel="stylesheet" media="all" href="css/screen_ie.css" />
+        <![endif]-->
 
         <!-- Skin CSS -->
         <link rel="stylesheet" href="css/skins/blue.css">
 
-        <!-- Responsive CSS 
-        <link rel="stylesheet" href="css/bootstrap-responsive-boxed.css" />
-        <link rel="stylesheet" href="css/theme-responsive.css" /> -->
+        <style type="text/css">
+            #chatbox {
+                position:relative;
+                top: 0%;
+                left: 0%;
+                padding-left: 5px;
+            }
+        </style>
 
         <!-- Favicons -->
         <link rel="shortcut icon" href="img/favicon.ico">
@@ -80,7 +92,7 @@
             unset($_SESSION['msg']['success']);
             echo '</div>';
         }
-        
+
         //alert warning
         if($_SESSION['msg']['warning']) {
             echo '<div class="alert alert-block alert bounce">';
@@ -89,7 +101,7 @@
             unset($_SESSION['msg']['warning']);
             echo '</div>';
         }
-        
+
         //alert info
         if($_SESSION['msg']['info']) {
             echo '<div class="alert alert-block alert-info bounce">';
@@ -101,6 +113,24 @@
 
     ?>
 
+<div id="sidr">
+    <ul>
+        <?php
+            $sidebar = 'SELECT * FROM members WHERE members.id = 11 OR members.id = 13 OR members.id = 14 OR members.id = 24 OR members.id = 16';
+            $sidebar = mysql_query($sidebar);
+            while($users = mysql_fetch_array($sidebar)){
+                echo '<li><a href="javascript:void(0)" onclick="javascript:chatWith(\''.$users['usr'].'\')">'.$users['fname'].' '.$users['lname'].'</a></li>';
+            }
+        ?>
+    </ul>
+</div>
+
+
+        <div id="main_container">
+        <div id="chatbox">
+            <a id="simple-menu" href="#sidr"><i class="icon-comment icon-2x"></i></a>
+        </div>
+
         <div class="body">
             <header>
                 <div class="container">
@@ -109,7 +139,7 @@
                             <img alt="Krieger Auction" src="img/spring_auction_logo.png">
                         </a>
                     </h1>
-                    
+
                     <!-- Search -->
                     <div class="search">
                         <form class="form-search" id="searchForm" action="search.php" method="get">
@@ -121,7 +151,7 @@
                             </div>
                         </form>
                     </div>
-                    
+
                     <!-- Navigation -->
                     <nav>
                         <ul class="nav nav-pills nav-top">
@@ -145,7 +175,7 @@
                                                 <li class="active"><a href="#login-tab" data-toggle="tab">Login</a></li>
                                                 <li><a href="#register-tab" data-toggle="tab">Register</a></li>
                                             </ul>
-                                        
+
                                             <div class="tab-content">
                                                 <div class="tab-pane active" id="login-tab">
                                                     <form action="" method="post">
@@ -196,10 +226,10 @@
                                                                 <select name="class" class="span3">
                                                                     <option value="0">Select Classroom 1:</option>
                                                                     <option value="0"></option>
-                                                                    <?php 
+                                                                    <?php
                                                                         $sql = 'SELECT * FROM class ORDER BY name ASC';
                                                                         $res = mysql_query($sql);
-                                                                        while($row = mysql_fetch_array($res)) { 
+                                                                        while($row = mysql_fetch_array($res)) {
                                                                             echo '<option value="'.$row['id'].'">'.$row['name'].'</option>';
                                                                         }
                                                                     ?>
@@ -209,10 +239,10 @@
                                                                 <select name="class2" class="span3">
                                                                     <option value="0" selected>Select Classroom 2:</option>
                                                                     <option value="0"></option>
-                                                                    <?php 
+                                                                    <?php
                                                                         $sql2 = 'SELECT * FROM class ORDER BY name ASC';
                                                                         $res2 = mysql_query($sql2);
-                                                                        while($row2 = mysql_fetch_array($res2)) { 
+                                                                        while($row2 = mysql_fetch_array($res2)) {
                                                                             echo '<option value="'.$row2['id'].'">'.$row2['name'].'</option>';
                                                                         }
                                                                     ?>
@@ -230,7 +260,7 @@
                         <?php
                             } else {
                         ?>
-                            <li>    
+                            <li>
                                 <a href="#logout" data-toggle="modal"><i class="icon-angle-right"></i>Logout</a>
                                 <div id="logout" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="logoutHead" aria-hidden="true">
                                     <div class="modal-body">
@@ -245,6 +275,7 @@
                                     </div>
                                 </div>
                             </li>
+
                             <span class="span1 pull-right">
                                 <a rel="tooltip" href="manage.php#account" data-original-title="Logged in as <?=$_SESSION['usr'].' (Access level: '.$_SESSION['acc'].')';?>"><i class="icon-user icon-large"></i></a>
                                 <?php
@@ -320,7 +351,7 @@
                             <?php
                                 }
                             ?>
-                            
+
                     <?php
                         }
                     ?>

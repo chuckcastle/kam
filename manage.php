@@ -300,7 +300,7 @@
                                     <li class="active"><a href="#organization" data-toggle="tab"><i class="icon-building"></i> All Organizations (<?=mysql_num_rows($orgres);?>)</a></li>
                                     <li><a href="#mine" data-toggle="tab"><i class="icon-user"></i> Assigned to Me (<?=mysql_num_rows($mineres);?>)</a></li>
                                     <li><a href="#account" data-toggle="tab"><i class="icon-user"></i> Accounts (<?=mysql_num_rows($usrres);?>)</a></li>
-                                    <li><a href="#messages" data-toggle="tab"><i class="icon-comment"></i> Messages (<?=mysql_num_rows($msgres);?>)</a></li>
+                                    <li><a href="#messages" data-toggle="tab"><i class="icon-comment"></i> Notifications (<?=mysql_num_rows($msgres);?>)</a></li>
                                 </ul>
                                 <div class="tab-content">
                                     <div class="tab-pane active" id="organization">
@@ -616,7 +616,7 @@
                                     </div> <!-- /tab-pane account -->
 
                                     <div class="tab-pane" id="messages">
-                                        <span class="pull-right"><a rel="tooltip" data-placement="top" href="#addmsg" data-original-title="Send Note" data-toggle="modal"><i class="icon-comment"></i><span class="alternative-font">&nbsp;Send Message</span></a></span>
+                                        <!-- <span class="pull-right"><a rel="tooltip" data-placement="top" href="#addmsg" data-original-title="Send Note" data-toggle="modal"><i class="icon-comment"></i><span class="alternative-font">&nbsp;Send Message</span></a></span> -->
                                             <div id="addmsg" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="addmsgLabel" aria-hidden="true">
 
                                             <div class="modal-header">

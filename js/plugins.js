@@ -2,7 +2,7 @@
 Plugin Name:    scrollToTop for jQuery.
 Written by:     Crivos - (http://www.crivos.com)
 Version:        0.1
-*/
+
 (function($) {
     $.extend({
         scrollToTop: function() {
@@ -36,6 +36,7 @@ Version:        0.1
         }
     });
 })(jQuery);
+*/
 
 /*
 Plugin Name:    BrowserSelector
