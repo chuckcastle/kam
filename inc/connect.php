@@ -13,7 +13,7 @@ if($_SERVER['SERVER_NAME']=='localhost'){
 
 $db_user        = 'kriegerdb';
 $db_pass        = 'kr13G3R@@';
-$db_database    = 'kriegerdb'; 
+$db_database    = 'kriegerdb';
 
 /* End config */
 

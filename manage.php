@@ -66,8 +66,10 @@
     if($_POST['submit']=='Send') {
         $usr_id = val($_POST['usr_id']);
         $text = val($_POST['text']);
-
-        $sql = 'INSERT INTO msg (usr_id, text, dt) VALUES ("'.$usr_id.'", "From '.nameize($usr).': '.sentence_case($text).'", now())';
+        $from = 'SELECT fname, lname FROM members WHERE members.id = '.$usrid.' LIMIT 1';
+        $from = mysql_query($from);
+        $from = mysql_fetch_array($from);
+        $sql = 'INSERT INTO msg (usr_id, text, dt) VALUES ("'.$usr_id.'", "From '.mb_substr($from['fname'], 0, 1, 'utf-8').'.&nbsp;'.$from['lname'].': '.sentence_case($text).'", now())';
         $res = mysql_query($sql);
 
         $_SESSION['msg']['success']='Lookie you!  Message sent!';
@@ -135,17 +137,12 @@
     $mineres = mysql_query($mineqry);
 
     //select proper info from org table
-    if($access >=3){
-        $orgwhere = ' WHERE donate <> 2';
-    } else {
-        $orgwhere = '';
-    }
-    $orgqry = 'SELECT * FROM org'.$orgwhere.' ORDER BY name ASC';
+    $orgqry = 'SELECT * FROM org WHERE avail = 0 ORDER BY name ASC';
     $orgres = mysql_query($orgqry);
 
     //pagination
     $adjacents = 5;
-    $query = 'SELECT COUNT(*) FROM org'.$orgwhere;
+    $query = 'SELECT COUNT(*) FROM org WHERE avail = 0';
     $total_items = mysql_fetch_array(mysql_query($query));
 
     $targetpage = "manage.php";
@@ -159,7 +156,7 @@
     }
 
     //get data
-    $getdata = 'SELECT * FROM org'.$orgwhere.' LIMIT '.$start.', '.$limit;
+    $getdata = 'SELECT * FROM org WHERE avail = 0 LIMIT '.$start.', '.$limit;
     $result = mysql_query($getdata);
 
     //setup page vars for display
@@ -297,7 +294,7 @@
 
                             <div class="tabs">
                                 <ul class="nav nav-tabs">
-                                    <li class="active"><a href="#organization" data-toggle="tab"><i class="icon-building"></i> All Organizations (<?=mysql_num_rows($orgres);?>)</a></li>
+                                    <li class="active"><a href="#organization" data-toggle="tab"><i class="icon-building"></i> Assigned Organizations (<?=mysql_num_rows($orgres);?>)</a></li>
                                     <li><a href="#mine" data-toggle="tab"><i class="icon-user"></i> Assigned to Me (<?=mysql_num_rows($mineres);?>)</a></li>
                                     <li><a href="#account" data-toggle="tab"><i class="icon-user"></i> Accounts (<?=mysql_num_rows($usrres);?>)</a></li>
                                     <li><a href="#messages" data-toggle="tab"><i class="icon-comment"></i> Notifications (<?=mysql_num_rows($msgres);?>)</a></li>
@@ -616,7 +613,7 @@
                                     </div> <!-- /tab-pane account -->
 
                                     <div class="tab-pane" id="messages">
-                                        <!-- <span class="pull-right"><a rel="tooltip" data-placement="top" href="#addmsg" data-original-title="Send Note" data-toggle="modal"><i class="icon-comment"></i><span class="alternative-font">&nbsp;Send Message</span></a></span> -->
+                                        <span class="pull-right"><a rel="tooltip" data-placement="top" href="#addmsg" data-original-title="Send Note" data-toggle="modal"><i class="icon-comment"></i><span class="alternative-font">&nbsp;Send Message</span></a></span>
                                             <div id="addmsg" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="addmsgLabel" aria-hidden="true">
 
                                             <div class="modal-header">

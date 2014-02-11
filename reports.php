@@ -33,7 +33,7 @@
     $highnum = $highnum['numkids'];
 
     //parent leaderboard
-    $prtldrqry = 'SELECT members.fname, members.lname, SUM(items.value) AS total FROM org JOIN members ON org.usr_id = members.id JOIN items ON items.org_id = org.id GROUP BY members.usr ORDER BY total DESC';
+    $prtldrqry = 'SELECT members.fname, members.lname, SUM(items.value) AS total FROM org JOIN members ON org.usr_id = members.id JOIN items ON items.org_id = org.id WHERE items.received = 1 GROUP BY members.usr ORDER BY total DESC';
     $prtldrres = mysql_query($prtldrqry);
 
     //select YES donate from org table
@@ -195,7 +195,7 @@
                                         <table class="table table-striped">
                                             <thead>
                                                 <th>Name</th>
-                                                <th>Total Value</th>
+                                                <th>Received Value</th>
                                                 <th>Participation Points</th>
                                             </thead>
 

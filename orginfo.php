@@ -1,31 +1,31 @@
 <?php
 //smoke and mirrors
     include('inc/head.php');
-    
+
 // LOGIN/PAGE ACCESS CHECK
 
     //if not logged in
     if(!isset($_SESSION['id'])) {
         $_SESSION['msg']['error']='Uhm... you\'ve gotta be logged in to do that...';
-        
+
         header("Location: index.php");
         exit;
     }
-    
+
     //if navigate to page directly, refresh to index.php
     if(!isset($_GET['orgid'])) {
         $_SESSION['msg']['warning']='My bad, can\'t let you do that :/';
-        
+
         header("Location: index.php");
         exit;
     }
-    
+
 //set variables
     $orgid = $_GET['orgid'];
     $usrid = $_SESSION['id'];
     $usr = $_SESSION['usr'];
     $access = $_SESSION['acc'];
-    
+
 //POST
 
     //if submit share
@@ -36,7 +36,7 @@
         $poc_phone = val($_POST['poc_phone']);
         $poc_email = val($_POST['name']);
         $desc = sentence_case(val($_POST['desc']));
-        
+
         send_mail(    'donotreply@chuckcastle.me',
         $_POST['email'],
         'Krieger Auction info for '.$name,
@@ -44,7 +44,7 @@
 
         $_SESSION['msg']['success']='Right on!  You successfully shared information on '.$name.' with '.$_POST['email'].'!';
     }
-    
+
     //if submit assign
     if($_POST['submit']=='Assign') {
         $name = nameize(val($_POST['name']));
@@ -54,17 +54,17 @@
 
         $_SESSION['msg']['success']='Woo hoo! You just assigned a user to '.$name.'!';
     }
-    
-    //if submit clear    
+
+    //if submit clear
     if($_POST['submit']=='Clear') {
         $name = nameize(val($_POST['name']));
-        
+
         $sql = 'UPDATE org SET avail = 1, usr_id = 0 WHERE id = '.$orgid;
         $res = mysql_query($sql);
 
         $_SESSION['msg']['info']='Awesome!  You cleared all user assignments from '.$name.'.';
     }
-    
+
     //if submit update
     if($_POST['submit']=='Update') {
         $name = val($_POST['name']);
@@ -78,7 +78,7 @@
         $poc_phone = formatphone(val(preg_replace("/[^0-9]/","", $_POST['poc_phone'])));
         $don = val($_POST['don']);
         $id = val($_POST['id']);
-   
+
         $sql = 'UPDATE org SET name="'.$name.'", cat_id='.$cat_id.', url="'.$url.'", org.desc="'.$desc.'", poc_name="'.$poc_name.'", poc_title="'.$poc_title.'", poc_email="'.$poc_email.'", poc_phone="'.$poc_phone.'", donate="'.$don.'" WHERE org.id='.$orgid.' LIMIT 1';
         $res = mysql_query($sql);
 
@@ -167,7 +167,7 @@
                                             $icon = 'question';
                                             $tooltip = 'Unknown if they will donate';
                                     }
-                                    
+
                                     echo '<a rel="tooltip" data-placement="top" data-original-title="'.$tooltip.'"><i class="icon-'.$icon.'"></i></a>';
                                 ?>
                                 <br />
@@ -193,7 +193,7 @@
                                     echo '<strong>'.$org['poc_name'].'</strong>&nbsp;'.$org['poc_title'].'<br />';
                                     echo '<i class="icon-phone">&nbsp;</i>'.$org['poc_phone'].'<br />';
                                     echo '<i class="icon-envelope">&nbsp;</i>'.$org['poc_email'].'<br />';
-                                ?>    
+                                ?>
                             </p>
                         </div> <!-- /span3 -->
                         <div id="icons" class="span3 pull-right">
@@ -207,24 +207,25 @@
                                     }
                                 }
 
+                                //show edit if admin or
+                                if($usrid = $org['usr_id'] || $access <= 3){
+                                    echo '<a rel="tooltip" data-placement="top" href="#edit" data-original-title="Edit details" data-toggle="modal"><i class="icon-gear icon-2x"></i>&nbsp;</a>';
+                                }
+
                                 //only show if user access level is 3 - manager, 2 - admin, or 1 - root
                                 if($access <= 3){
-                            ?>
-                                <a rel="tooltip" data-placement="top" href="#assign" data-original-title="Update user assignment" data-toggle="modal"><i class="icon-group icon-2x"></i>&nbsp;</a>                            
-                                <a rel="tooltip" data-placement="top" href="#edit" data-original-title="Edit details" data-toggle="modal"><i class="icon-gear icon-2x"></i>&nbsp;</a>                                
-                                <a rel="tooltip" data-placement="top" href="items.php?orgid=<?=$orgid;?>" data-original-title="Items" data-toggle="modal"><i class="icon-tag icon-2x"></i>&nbsp;</a>
-                            <?php
+                                    echo '<a rel="tooltip" data-placement="top" href="#assign" data-original-title="Update user assignment" data-toggle="modal"><i class="icon-group icon-2x"></i>&nbsp;</a>';
+                                    echo '<a rel="tooltip" data-placement="top" href="items.php?orgid=<?=$orgid;?>" data-original-title="Items" data-toggle="modal"><i class="icon-tag icon-2x"></i>&nbsp;</a>';
                                 }
                             ?>
                                 <a rel="tooltip" data-placement="top" href="notes.php?orgid=<?=$orgid;?>" data-original-title="Notes"><i class="icon-edit icon-2x"></i>&nbsp;</a>
-
                                 <a rel="tooltip" data-placement="top" href="#share" data-original-title="Share info" data-toggle="modal"><i class="icon-share icon-2x"></i>&nbsp;</a>
 
                             </p> <!-- /icons -->
                         </div> <!-- /icons span3 -->
                     </div> <!-- /contact-info -->
-                    
-                    <div id="description" class="row">                        
+
+                    <div id="description" class="row">
                         <div class="span12">
                             <p><?=$org['desc']?></p>
                         </div> <!-- /span12 -->
@@ -232,7 +233,7 @@
                 </div> <!-- /container -->
 
             </div> <!-- /main -->
-            
+
             <!-- share modal -->
             <div id="share" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="shareLabel" aria-hidden="true">
 
@@ -242,7 +243,7 @@
                 </div> <!-- /modal-header -->
 
                 <div class="modal-body">
-                    <form action="" method="post">                                            
+                    <form action="" method="post">
                         <label>Recipient's Email Address:</label>
                         <input type="text" name="email" value maxlength="100" class="span3" />
                         <label>Additional Comments:</label>
@@ -260,7 +261,7 @@
                     </form>
                 </div> <!-- /modal-footer -->
             </div> <!-- /share modal -->
-        
+
             <!-- assign modal -->
             <div id="assign" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="assignLabel" aria-hidden="true">
 
@@ -270,7 +271,7 @@
                 </div> <!-- /modal-header -->
 
                 <div class="modal-body">
-                    <form action="" method="post">                                            
+                    <form action="" method="post">
                         <label>Select User:</label>
                         <select name="userid" class="span3">
                             <option value="0">Select User:</option>
@@ -278,7 +279,7 @@
                             <?php
                                 $sql = 'SELECT * FROM members'.$where.' ORDER BY fname ASC';
                                 $res = mysql_query($sql);
-                                while($sub = mysql_fetch_array($res)) { 
+                                while($sub = mysql_fetch_array($res)) {
                                     $u1 = '';
                                     if($org['usr_id'] == $sub['id']) {
                                         $u1 = 'selected';
@@ -299,7 +300,7 @@
 
 <?php
     //only show if user access level is 3 - manager, 2 - admin, or 1 - root
-    if($access <= 3){
+    if($usrid = $org['usr_id'] || $access <= 3){
 ?>
             <!-- edit modal -->
             <div id="edit" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="editLabel" aria-hidden="true">
@@ -310,7 +311,7 @@
                 </div> <!-- /modal-header -->
 
                 <div class="modal-body">
-                    <form action="" method="post">                                            
+                    <form action="" method="post">
                         <label>Organization:</label>
                             <input type="text" name="name" value="<?=$org['name'];?>" maxlength="100" class="span6">
                             <label>Category:</label>
@@ -325,7 +326,7 @@
                                         if($org['cat_id'] == $cat['id']){
                                             $sel = 'selected';
                                         }
-                                        echo '<option value="'.$cat['id'].'" '.$sel.'>'.$cat['title'].'</option>';    
+                                        echo '<option value="'.$cat['id'].'" '.$sel.'>'.$cat['title'].'</option>';
                                     }
                                 ?>
                             </select>
