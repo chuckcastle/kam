@@ -34,10 +34,10 @@
         $poc_name = nameize(val($_POST['poc_name']));
         $poc_title = val($_POST['poc_title']);
         $poc_phone = val($_POST['poc_phone']);
-        $poc_email = val($_POST['name']);
+        $poc_email = val($_POST['poc_email']);
         $desc = sentence_case(val($_POST['desc']));
 
-        send_mail(    'donotreply@chuckcastle.me',
+        send_mail(    'donotreply@kriegercenter.org',
         $_POST['email'],
         'Krieger Auction info for '.$name,
         'Hey there!'."\n\n".$_SESSION['usr'].' over at the Krieger Auction site wanted you to have this info on '.$name.'.'."\n\n".$_POST['comment']."\n\n".'Point of contact: '.$poc_name.', '.$poc_title."\n".'Phone number: '.$poc_phone."\n".'Email: '.$poc_email."\n\n".'And, a little something about them: '."\n".$desc."\n\n\n".'--'."\n".'Please do not reply to this email. If you do a baby elephant will trip over his trunk and fall into a mud hole, and the other animals will laugh; please don\'t make animals laugh at a baby elephant.');
@@ -48,11 +48,26 @@
     //if submit assign
     if($_POST['submit']=='Assign') {
         $name = nameize(val($_POST['name']));
+        $poc_name = nameize(val($_POST['poc_name']));
+        $poc_title = val($_POST['poc_title']);
+        $poc_phone = val($_POST['poc_phone']);
+        $poc_email = val($_POST['poc_email']);
+        $desc = sentence_case(val($_POST['desc']));
 
         $sql = 'UPDATE org SET avail = 0, usr_id = '.$_POST['userid'].' WHERE id = '.$orgid;
         $res = mysql_query($sql);
 
-        $_SESSION['msg']['success']='Woo hoo! You just assigned a user to '.$name.'!';
+        if($_POST['userid'] != $usrid){
+            $query = 'SELECT * FROM members WHERE members.id = '.$_POST['userid'].' LIMIT 1';
+            $query = mysql_query($query);
+            $data = mysql_fetch_array($query);
+            send_mail(    'donotreply@kriegercenter.org',
+            $data['email'],
+            'Krieger Auction info for '.$name,
+            'Hey '.$data['fname'].','."\n\n".$_SESSION['usr'].' over at the Krieger Auction Manager just assigned '.$name.' to you!  This is the POC info we have so far:'."\n\n".'Point of contact: '.$poc_name.', '.$poc_title."\n".'Phone number: '.$poc_phone."\n".'Email: '.$poc_email."\n\n".'And, a little something about them: '."\n".$desc."\n\n".'You can log in at http://auction.kriegercenter.org and check out the "My Assignments" tab under the "Manage" menu.'."\n\n\n".'--'."\n".'Please do not reply to this email. If you do a baby elephant will trip over his trunk and fall into a mud hole, and the other animals will laugh; please don\'t make animals laugh at a baby elephant.');
+        }
+
+        $_SESSION['msg']['success']='Woo hoo! You just updated the user assignment for '.$name.'!';
     }
 
     //if submit clear
@@ -129,7 +144,7 @@
                             <div class="span12">
                                 <ul class="breadcrumb">
                                     <li><a href="index.php">Home</a><span class="divider">/</span></li>
-                                    <li class="active"><?=$org['name'];?></li>
+                                    <li class="active"><?php echo $org['name'];?></li>
                                 </ul>
                             </div> <!-- /span12 -->
                         </div> <!-- /row -->
@@ -183,7 +198,7 @@
                                     }
                                 ?>
                                 <br />
-                                <?='<a href="http://'.$org['url'].'" target="_blank">'.$org['url']?></a>
+                                <?php echo '<a href="http://'.$org['url'].'" target="_blank">'.$org['url']?></a>
                             </p>
                         </div> <!-- /span6 -->
                         <div class="span3">
@@ -215,10 +230,10 @@
                                 //only show if user access level is 3 - manager, 2 - admin, or 1 - root
                                 if($access <= 3){
                                     echo '<a rel="tooltip" data-placement="top" href="#assign" data-original-title="Update user assignment" data-toggle="modal"><i class="icon-group icon-2x"></i>&nbsp;</a>';
-                                    echo '<a rel="tooltip" data-placement="top" href="items.php?orgid=<?=$orgid;?>" data-original-title="Items" data-toggle="modal"><i class="icon-tag icon-2x"></i>&nbsp;</a>';
+                                    echo '<a rel="tooltip" data-placement="top" href="items.php?orgid='.$orgid.'" data-original-title="Items" data-toggle="modal"><i class="icon-tag icon-2x"></i>&nbsp;</a>';
                                 }
                             ?>
-                                <a rel="tooltip" data-placement="top" href="notes.php?orgid=<?=$orgid;?>" data-original-title="Notes"><i class="icon-edit icon-2x"></i>&nbsp;</a>
+                                <a rel="tooltip" data-placement="top" href="notes.php?orgid=<?php echo $orgid;?>" data-original-title="Notes"><i class="icon-edit icon-2x"></i>&nbsp;</a>
                                 <a rel="tooltip" data-placement="top" href="#share" data-original-title="Share info" data-toggle="modal"><i class="icon-share icon-2x"></i>&nbsp;</a>
 
                             </p> <!-- /icons -->
@@ -227,7 +242,7 @@
 
                     <div id="description" class="row">
                         <div class="span12">
-                            <p><?=$org['desc']?></p>
+                            <p><?php echo $org['desc']?></p>
                         </div> <!-- /span12 -->
                     </div> <!-- /description -->
                 </div> <!-- /container -->
@@ -239,7 +254,7 @@
 
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h3 id="shareLabel">Share <?=$org['name'];?> Details</h3>
+                    <h3 id="shareLabel">Share <?php echo $org['name'];?> Details</h3>
                 </div> <!-- /modal-header -->
 
                 <div class="modal-body">
@@ -251,12 +266,12 @@
                 </div> <!-- /modal-body -->
 
                 <div class="modal-footer">
-                        <input type="hidden" name="name" value="<?=$org['name'];?>">
-                        <input type="hidden" name="poc_name" value="<?=$org['poc_name'];?>">
-                        <input type="hidden" name="poc_title" value="<?=$org['poc_title'];?>">
-                        <input type="hidden" name="poc_phone" value="<?=$org['poc_phone'];?>">
-                        <input type="hidden" name="poc_email" value="<?=$org['poc_email'];?>">
-                        <input type="hidden" name="desc" value="<?=$org['desc'];?>">
+                        <input type="hidden" name="name" value="<?php echo $org['name'];?>">
+                        <input type="hidden" name="poc_name" value="<?php echo $org['poc_name'];?>">
+                        <input type="hidden" name="poc_title" value="<?php echo $org['poc_title'];?>">
+                        <input type="hidden" name="poc_phone" value="<?php echo $org['poc_phone'];?>">
+                        <input type="hidden" name="poc_email" value="<?php echo $org['poc_email'];?>">
+                        <input type="hidden" name="desc" value="<?php echo $org['desc'];?>">
                         <input type="submit" name="submit" value="Share" class="btn btn-primary">
                     </form>
                 </div> <!-- /modal-footer -->
@@ -267,7 +282,7 @@
 
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h3 id="assignLabel">Assign User to <?=$org['name'];?></h3>
+                    <h3 id="assignLabel">Assign User to <?php echo $org['name'];?></h3>
                 </div> <!-- /modal-header -->
 
                 <div class="modal-body">
@@ -291,7 +306,12 @@
                 </div> <!-- /modal-body -->
 
                 <div class="modal-footer">
-                        <input type="hidden" name="name" value="<?=$org['name'];?>">
+                        <input type="hidden" name="name" value="<?php echo $org['name'];?>">
+                        <input type="hidden" name="poc_name" value="<?php echo $org['poc_name'];?>">
+                        <input type="hidden" name="poc_title" value="<?php echo $org['poc_title'];?>">
+                        <input type="hidden" name="poc_phone" value="<?php echo $org['poc_phone'];?>">
+                        <input type="hidden" name="poc_email" value="<?php echo $org['poc_email'];?>">
+                        <input type="hidden" name="desc" value="<?php echo $org['desc'];?>">
                         <input type="submit" name="submit" value="Assign" class="btn btn-primary">
                         <input type="submit" name="submit" value="Clear" class="btn btn-danger">
                     </form>
@@ -307,13 +327,13 @@
 
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h3 id="editLabel">Edit <?=$org['name'];?> Details</h3>
+                    <h3 id="editLabel">Edit <?php echo $org['name'];?> Details</h3>
                 </div> <!-- /modal-header -->
 
                 <div class="modal-body">
                     <form action="" method="post">
                         <label>Organization:</label>
-                            <input type="text" name="name" value="<?=$org['name'];?>" maxlength="100" class="span6">
+                            <input type="text" name="name" value="<?php echo $org['name'];?>" maxlength="100" class="span6">
                             <label>Category:</label>
                             <select name="catid">
                                 <option value="0">Select:</option>
@@ -331,7 +351,7 @@
                                 ?>
                             </select>
                             <label>Website:</label>
-                            <input type="text" name="url" value="<?=$org['url'];?>" maxlength="100" class="span6">
+                            <input type="text" name="url" value="<?php echo $org['url'];?>" maxlength="100" class="span6">
                             <label>Will they donate this year?</label>
                             <select name="don">
                                 <?php
@@ -360,15 +380,15 @@
                                 ?>
                             </select>
                             <label>Point of Contact:</label>
-                            <input type="text" name="poc_name" value="<?=$org['poc_name'];?>" maxlength="100" class="span6">
+                            <input type="text" name="poc_name" value="<?php echo $org['poc_name'];?>" maxlength="100" class="span6">
                             <label>Contact Title/Position:</label>
-                            <input type="text" name="poc_title" value="<?=$org['poc_title'];?>" maxlength="100" class="span6">
+                            <input type="text" name="poc_title" value="<?php echo $org['poc_title'];?>" maxlength="100" class="span6">
                             <label>Phone Number (numbers only):</label>
-                            <input type="text" name="poc_phone" value="<?=$org['poc_phone'];?>" maxlength="10" class="span6">
+                            <input type="text" name="poc_phone" value="<?php echo $org['poc_phone'];?>" maxlength="10" class="span6">
                             <label>Email:</label>
-                            <input type="text" name="poc_email" value="<?=$org['poc_email'];?>" maxlength="100" class="span6">
+                            <input type="text" name="poc_email" value="<?php echo $org['poc_email'];?>" maxlength="100" class="span6">
                             <label>Description:</label>
-                            <textarea rows="4" class="span6" name="desc"><?=$org['desc'];?></textarea>
+                            <textarea rows="4" class="span6" name="desc"><?php echo $org['desc'];?></textarea>
                 </div> <!-- /modal-body -->
 
                 <div class="modal-footer">
