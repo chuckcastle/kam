@@ -32,25 +32,9 @@
         <!-- Custom CSS -->
         <link rel="stylesheet" href="css/tablecloth.css">
         <link rel="stylesheet" href="css/bootstrap-tables.css">
-        <link type="text/css" rel="stylesheet" media="all" href="css/chat.css" />
-        <link type="text/css" rel="stylesheet" media="all" href="css/screen.css" />
-        <link rel="stylesheet" href="css/jquery.sidr.dark.css">
-
-        <!--[if lte IE 7]>
-            <link type="text/css" rel="stylesheet" media="all" href="css/screen_ie.css" />
-        <![endif]-->
 
         <!-- Skin CSS -->
         <link rel="stylesheet" href="css/skins/blue.css">
-
-        <style type="text/css">
-            #chatbox {
-                position:relative;
-                top: 0%;
-                left: 0%;
-                padding-left: 5px;
-            }
-        </style>
 
         <!-- Favicons -->
         <link rel="shortcut icon" href="img/favicon.ico">
@@ -111,28 +95,8 @@
             echo '</div>';
         }
 
-    if(isset($_SESSION['id'])){
     ?>
 
-<div id="sidr">
-    <ul>
-        <?php
-            $sidebar = 'SELECT * FROM members WHERE members.id = 11 OR members.id = 13 OR members.id = 14 OR members.id = 24 OR members.id = 16';
-            $sidebar = mysql_query($sidebar);
-            while($users = mysql_fetch_array($sidebar)){
-                echo '<li><a href="javascript:void(0)" onclick="javascript:chatWith(\''.$users['usr'].'\')">'.$users['fname'].' '.$users['lname'].'</a></li>';
-            }
-        ?>
-    </ul>
-</div>
-
-        <div id="chatbox">
-            <a id="simple-menu" href="#sidr"><i class="icon-comment icon-2x"></i></a>
-        </div>
-<?php
-    }
-?>
-        <div id="main_container">
         <div class="body">
             <header>
                 <div class="container">
@@ -317,7 +281,7 @@
                                     <li><a href="manage.php#organization">Organizations</a></li>
                                     <li><a href="manage.php#mine">My Assignments</a></li>
                                     <li><a href="manage.php#account">Account</a></li>
-                                    <li><a href="manage.php#messages">Messages</a></li>
+                                    <li><a href="manage.php#messages">Notifications</a></li>
                                 </ul>
                             </li>
                             <li class="dropdown">

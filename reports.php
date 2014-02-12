@@ -33,7 +33,7 @@
     $highnum = $highnum['numkids'];
 
     //parent leaderboard
-    $prtldrqry = 'SELECT members.fname, members.lname, SUM(items.value) AS total FROM org JOIN members ON org.usr_id = members.id JOIN items ON items.org_id = org.id GROUP BY members.usr ORDER BY total DESC';
+    $prtldrqry = 'SELECT members.fname, members.lname, SUM(items.value) AS total FROM org JOIN members ON org.usr_id = members.id JOIN items ON items.org_id = org.id WHERE items.received = 1 GROUP BY members.usr ORDER BY total DESC';
     $prtldrres = mysql_query($prtldrqry);
 
     //select YES donate from org table
@@ -45,7 +45,7 @@
     $nores = mysql_query($noqry);
 
     //select proper info from items table
-    $rcvqry = 'SELECT items.org_id, items.desc, items.value, items.location, org.id, org.name FROM items INNER JOIN org ON items.org_id=org.id WHERE received = 1 ORDER BY org.name ASC';
+    $rcvqry = 'SELECT items.org_id, items.desc, items.value, items.location, items.itemnum, org.id, org.name FROM items INNER JOIN org ON items.org_id=org.id WHERE received = 1 ORDER BY items.itemnum ASC';
     $rcvres = mysql_query($rcvqry);
 
 //include html header
@@ -195,7 +195,7 @@
                                         <table class="table table-striped">
                                             <thead>
                                                 <th>Name</th>
-                                                <th>Total Value</th>
+                                                <th>Received Value</th>
                                                 <th>Participation Points</th>
                                             </thead>
 
@@ -225,6 +225,7 @@
                                                 <th>Description</th>
                                                 <th>Value</th>
                                                 <th>Location</th>
+                                                <th>Item #</th>
                                             </thead>
 
                                             <tbody>
@@ -236,6 +237,7 @@
                                                     echo '    <td>'.$row['desc'].'</td>'."\n";
                                                     echo '    <td>$'.$row['value'].'</td>'."\n";
                                                     echo '    <td>'.$row['location'].'</td>'."\n";
+                                                    echo '    <td>'.$row['itemnum'].'</td>'."\n";
                                                     echo '</tr>'."\n";
                                                 }
                                             ?>

@@ -29,7 +29,6 @@
                 </div>
             </footer>
         </div>
-        </div>
 
         <!-- Libs -->
         <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
@@ -41,9 +40,6 @@
         <script src="vendor/jquery.tablecloth.js"></script>
         <script src="vendor/magnific-popup/magnific-popup.js"></script>
         <script src="vendor/jquery.validate.js"></script>
-        <script src="vendor/chat.js"></script>
-        <script src="vendor/jquery.sidr.min.js"></script>
-
         <script src="js/plugins.js"></script>
 
         <!-- Theme Initializer -->
