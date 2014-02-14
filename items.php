@@ -1,31 +1,31 @@
 <?php
 //smoke and mirrors
     include('inc/head.php');
-    
+
 // LOGIN/PAGE ACCESS CHECK
 
     //if not logged in
     if(!isset($_SESSION['id'])) {
         $_SESSION['msg']['error']='Uhm... you\'ve gotta be logged in to do that...';
-        
+
         header("Location: index.php");
         exit;
     }
-    
+
     //if navigate to page directly, refresh to index.php
     if(!isset($_GET['orgid'])) {
         $_SESSION['msg']['warning']='My bad, can\'t let you do that :/';
-        
+
         header("Location: index.php");
         exit;
     }
-    
+
 //set variables
     $orgid = $_GET['orgid'];
     $usrid = $_SESSION['id'];
     $usr = $_SESSION['usr'];
     $access = $_SESSION['acc'];
-    
+
 //POST
 
     //if submit add
@@ -39,7 +39,7 @@
         }
         $received = val($_POST['rcv']);
         if($received==1){
-            $emailqry = 'SELECT members.fname, members.email, org.name FROM members JOIN org ON org.usr_id = members.id WHERE org.id = '.$orgid.' LIMIT 1';
+            $emailqry = 'SELECT members.fname, members.email, org.name FROM members JOIN org ON org.usr_id = members.id WHERE org.id = '.$orgid.' AND items.msg_sent = 0 LIMIT 1';
             $emailres = mysql_query($emailqry);
             $email = mysql_fetch_array($emailres);
             send_mail(    'donotreply@krigercenter.org',
@@ -56,7 +56,7 @@
 
         $_SESSION['msg']['success']='Sweet! Item added!';
     }
-    
+
     //if submit update
     if($_POST['submit']=='Update') {
         $itemdesc = val($_POST['itemdesc']);
@@ -68,7 +68,7 @@
         }
         $received = val($_POST['rcv']);
         if($received==1){
-            $emailqry = 'SELECT members.fname, members.email, org.name FROM members JOIN org ON org.usr_id = members.id WHERE org.id = '.$orgid.' LIMIT 1';
+            $emailqry = 'SELECT members.fname, members.email, org.name FROM members JOIN org ON org.usr_id = members.id WHERE org.id = '.$orgid.' AND items.msg_sent = 0 LIMIT 1';
             $emailres = mysql_query($emailqry);
             $email = mysql_fetch_array($emailres);
             send_mail(    'donotreply@krigercenter.org',
@@ -80,17 +80,17 @@
         $dt = date("Y-m-d H:i:s");
         $itemid = val($_POST['itemid']);
         $class = val($_POST['class']);
-        
+
         $sql = 'UPDATE items SET items.desc="'.sentence_case($itemdesc).'", value='.$value.', itemnum='.$itemnum.', received='.$received.', location="'.$loc.'", usr_id='.$usrid.', class_id="'.$class.'", dt="'.$dt.'" WHERE items.id='.$itemid.' LIMIT 1';
         $res = mysql_query($sql);
 
         $_SESSION['msg']['success']='Right on!  You successfully updated the item!';
     }
-    
+
     //if submit delete
     if($_POST['submit']=='Delete') {
         $itemid = val($_POST['itemid']);
-        
+
         $sql = 'DELETE FROM items WHERE items.id = '.$itemid.' LIMIT 1';
         $res = mysql_query($sql);
 
@@ -98,7 +98,7 @@
     }
 
 //SQL
-    
+
     //select info from org table
     $orgqry = 'SELECT * FROM org WHERE id = '.$orgid;
     $orgres = mysql_query($orgqry);
@@ -108,17 +108,17 @@
     $itmqry = 'SELECT items.id, items.org_id, items.desc, items.value, items.itemnum, items.received, items.location, items.dt, members.usr, members.fname, members.lname FROM items INNER JOIN members ON items.usr_id=members.id WHERE org_id = '.$orgid.' ORDER BY items.dt DESC';
     $itmres = mysql_query($itmqry);
     $items = mysql_num_rows($itmres);
-    
+
     //select info from class table
     $clsqry = 'SELECT class.id, class.title FROM class JOIN members on members.class_id = class.id';
     $clsres = mysql_query($clsqry);
-    
+
 //include html header
     include('inc/header.php');
 ?>
 
             <div role="main" class="main">
-            
+
                 <section class="page-top">
                     <div class="container">
                         <div class="row">
@@ -139,7 +139,7 @@
                 </section>
 
                 <div class="container">
-                
+
                     <div class="row">
                         <div class="span6">
                             <h3><?=$orgrow['name'].' Items ('.$items.')';?></h3>
@@ -147,10 +147,10 @@
                         <div class="span6">
                             <p class="pull-right">
                                 <a href="#additem" data-toggle="modal"><i class="icon-pencil icon-large"></i><span class="alternative-font">&nbsp;Add Item</span></a>
-                            </p>    
+                            </p>
                         </div> <!-- /span6 -->
                     </div> <!-- /row -->
-                
+
                     <div id="items" class="row">
                         <div class="span12">
                             <ul class="comments">
@@ -191,7 +191,7 @@
                                                             Credit goes to:
                                                         </label>
                                                         <select name="class">
-                                                        <?php 
+                                                        <?php
                                                             $sql2 = 'SELECT class.id AS classid, class.name FROM class JOIN members ON members.class_id = class.id OR members.class_id2 = class.id JOIN org ON org.usr_id = members.id JOIN items ON items.org_id = org.id WHERE org.id = '.$orgid;
                                                             $res2 = mysql_query($sql2);
                                                             while($row2 = mysql_fetch_array($res2)) {
@@ -207,7 +207,7 @@
                                                         <input type="submit" name="submit" value="Delete" class="btn btn-danger">
                                                     </form>
                                                 </div>
-                                            </div> <!-- /edititem -->    
+                                            </div> <!-- /edititem -->
                                             <?php endif; ?>
                                             <span class="comment-by">
                                                 <i class="icon-user"></i>
@@ -223,7 +223,7 @@
                                             </span>
                                         </div>
                                     </div> <!-- /comment -->
-                                </li>    
+                                </li>
                                 <?php
                                     }
                                 ?>
@@ -258,7 +258,7 @@
             Credit goes to:
         </label>
         <select name="class">
-            <?php 
+            <?php
                 $sql = 'SELECT class.name FROM class JOIN members ON members.class_id = class.id OR members.class_id2 = class.id JOIN org ON org.usr_id = members.id JOIN items ON items.org_id = org.id WHERE org.id = '.$orgid;
                 $res = mysql_query($sql);
                 while($row = mysql_fetch_array($res)) {
