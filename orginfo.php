@@ -103,14 +103,11 @@
     //if submit delete
     if($_POST['submit']=='Delete') {
         $name = nameize(val($_POST['name']));
-        $sql = 'DELETE FROM org WHERE id = '.$orgid.' LIMIT 1';
-        $res = mysql_query($sql);
-        $sql = 'DELETE FROM notes WHERE org_id = '.$orgid.' LIMIT 1';
-        $res = mysql_query($sql);
-        $sql = 'DELETE FROM items WHERE org_id = '.$orgid.' LIMIT 1';
-        $res = mysql_query($sql);
-        $sql = 'DELETE FROM profile WHERE org_id = '.$orgid.' LIMIT 1';
-        $res = mysql_query($sql);
+        //delete organization
+        mysql_query('DELETE FROM org WHERE id = '.$orgid.' LIMIT 1');
+        //delete notes/items
+        mysql_query('DELETE FROM notes WHERE org_id = '.$orgid);
+        mysql_query('DELETE FROM items WHERE org_id = '.$orgid);
 
         $_SESSION['msg']['info']='Right on!  You successfully deleted '.$name.'!';
         header('Location: manage.php?tab=org');

@@ -38,20 +38,25 @@
         $itemnum = val($_POST['itemnum']);
         }
         $received = val($_POST['rcv']);
+        $msgsnt = 0;
         if($received==1){
-            $emailqry = 'SELECT members.fname, members.email, org.name FROM members JOIN org ON org.usr_id = members.id WHERE org.id = '.$orgid.' AND items.msg_sent = 0 LIMIT 1';
+            $emailqry = 'SELECT members.fname, members.email, org.name FROM members JOIN org ON org.usr_id = members.id JOIN items ON items.org_id = org.id WHERE org.id = '.$orgid.' AND items.msg_sent = 0';
             $emailres = mysql_query($emailqry);
-            $email = mysql_fetch_array($emailres);
-            send_mail(    'donotreply@krigercenter.org',
-            $email['email'],
-            'A donation has been received!',
-            'Hey '.$email['fname'].','."\n\n".'A donation has been received for '.$email['name']."\n\n".'You can now login at http://auction.kriegercenter.org to check it out.'."\n\n".'--'."\n".'Please do not reply to this email.  If you do, a baby polar bear will slip on ice and the penguins will all point and laugh.');
+            while($email = mysql_fetch_array($emailres)){
+                send_mail(
+                    'donotreply@krigercenter.org',
+                    $email['email'],
+                    'A donation has been received!',
+                    'Hey '.$email['fname'].','."\n\n".'A donation has been received for '.$email['name']."\n\n".'You can now login at http://auction.kriegercenter.org to check it out.'."\n\n".'--'."\n".'Please do not reply to this email.  If you do, a baby polar bear will slip on ice and the penguins will all point and laugh.'
+                );
+                $msgsnt = 1;
+            }
         }
         $loc = val($_POST['loc']);
         $class = val($_POST['class']);
         $dt = date("Y-m-d H:i:s");
 
-        $sql = 'INSERT INTO items (id, org_id, items.desc, value, itemnum, received, location, usr_id, class_id, dt) VALUES (NULL, "'.$orgid.'", "'.sentence_case($itemdesc).'", "'.$value.'", "'.$itemnum.'", "'.$received.'", "'.$loc.'", "'.$usrid.'", "'.$class.'", "'.$dt.'")';
+        $sql = 'INSERT INTO items (id, org_id, items.desc, value, itemnum, received, location, usr_id, class_id, dt, msg_sent) VALUES (NULL, "'.$orgid.'", "'.sentence_case($itemdesc).'", "'.$value.'", "'.$itemnum.'", "'.$received.'", "'.$loc.'", "'.$usrid.'", "'.$class.'", "'.$dt.'", "'.$msgsnt.'")';
         $res = mysql_query($sql);
 
         $_SESSION['msg']['success']='Sweet! Item added!';
@@ -68,13 +73,17 @@
         }
         $received = val($_POST['rcv']);
         if($received==1){
-            $emailqry = 'SELECT members.fname, members.email, org.name FROM members JOIN org ON org.usr_id = members.id WHERE org.id = '.$orgid.' AND items.msg_sent = 0 LIMIT 1';
+            $emailqry = 'SELECT members.fname, members.email, org.name FROM members JOIN org ON org.usr_id = members.id JOIN items ON items.org_id = org.id WHERE items.id = "'.$_POST['itemid'].'" AND items.msg_sent = 0 LIMIT 1';
             $emailres = mysql_query($emailqry);
-            $email = mysql_fetch_array($emailres);
-            send_mail(    'donotreply@krigercenter.org',
-            $email['email'],
-            'A donation has been received!',
-            'Hey '.$email['fname'].','."\n\n".'A donation has been received for '.$email['name']."\n\n".'You can now login at http://auction.kriegercenter.org to check it out.'."\n\n".'--'."\n".'Please do not reply to this email.  If you do, a baby polar bear will slip on ice and the penguins will all point and laugh.');
+            while($email = mysql_fetch_array($emailres)){
+                send_mail(
+                    'donotreply@krigercenter.org',
+                    $email['email'],
+                    'A donation has been received!',
+                    'Hey '.$email['fname'].','."\n\n".'A donation has been received for '.$email['name']."\n\n".'You can now login at http://auction.kriegercenter.org to check it out.'."\n\n".'--'."\n".'Please do not reply to this email.  If you do, a baby polar bear will slip on ice and the penguins will all point and laugh.'
+                );
+                mysql_query('UPDATE items SET msg_sent = "1" WHERE items.id = '.$_POST['itemid']);
+            }
         }
         $loc = val($_POST['loc']);
         $dt = date("Y-m-d H:i:s");

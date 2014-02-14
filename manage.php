@@ -116,12 +116,18 @@
 
     //if submit delusr
     if($_POST['submit']=='Delete') {
-        $sql = 'DELETE FROM members WHERE id = '.$_POST['usrid'].' LIMIT 1';
-        $res = mysql_query($sql);
-        $sql = 'DELETE FROM profile WHERE usr_id = '.$_POST['usrid'].' LIMIT 1';
-        $res = mysql_query($sql);
-        $sql = 'UPDATE members SET sub = 0 WHERE sub = '.$_POST['usrid'];
-        $res = mysql_query($sql);
+        //delete account
+        mysql_query('DELETE FROM members WHERE id = '.$_POST['usrid'].' LIMIT 1');
+        //reset all sub accounts to 0
+        mysql_query('UPDATE members SET sub = 0 WHERE sub = '.$_POST['usrid']);
+        //reset class parents
+        mysql_query('UPDATE class SET parent1 = 0 WHERE parent1 = '.$_POST['usrid']);
+        mysql_query('UPDATE class SET parent2 = 0 WHERE parent2 = '.$_POST['usrid']);
+        //set notes/items/msg/org to unassigned
+        mysql_query('UPDATE notes SET usr_id = "37" WHERE usr_id = '.$_POST['usrid']);
+        mysql_query('UPDATE items SET usr_id = "37" WHERE usr_id = '.$_POST['usrid']);
+        mysql_query('UPDATE msg SET usr_id = "37" WHERE usr_id = '.$_POST['usrid']);
+        mysql_query('UPDATE org SET usr_id = "37" WHERE usr_id = '.$_POST['usrid']);
 
         $_SESSION['msg']['info']='Right on!  You successfully deleted the user!';
     }
