@@ -85,7 +85,7 @@
                             while($solrow = mysql_fetch_array($solres)){
                                 $totsol = $solrow['total'];
                                 //percentage of goal
-                                $persol = round(($totsol/$goal)*100);
+                                $persol = floor(($totsol/$goal)*100);
                             }
 
                             //select total amount donation received from items table
@@ -95,7 +95,7 @@
                             while($row = mysql_fetch_array($rcvres2)){
                                 $totrcv = $row['total'];
                                 //percentage of goal
-                                $perrcv = round(($totrcv/$goal)*100);
+                                $perrcv = floor(($totrcv/$goal)*100);
                             }
 
                             //format as currency
@@ -174,7 +174,7 @@
                                                         $weight = number_format(eval('return '.$row['total'].$times.$magicnum.';'), 2, '.', ',');
 
                                                         //percentage of goal
-                                                        $goal = round(($row['total']/$row['goal'])*100).'%';
+                                                        $goal = floor(($row['total']/$row['goal'])*100).'%';
 
                                                         echo '    <td>$'.$row['goal'].'</td>'."\n";
                                                         echo '    <td>'.$goal.'</td>'."\n";
