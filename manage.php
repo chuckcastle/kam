@@ -23,10 +23,12 @@
     //if submit add
     if($_POST['submit']=='Add') {
         $name = val($_POST['name']);
+        $catid = val($_POST['catid']);
         if($name==''){
             $_SESSION['msg']['error']='Oh snap! You forgot to enter an organization name!';
+        } elseif($catid=='0'){
+            $_SESSION['msg']['error']='Oh snap! You forgot to enter a category!';
         } else {
-            $catid = val($_POST['catid']);
             $url = val($_POST['url']);
             $desc = val($_POST['desc']);
             $poc_name = val($_POST['poc_name']);
@@ -35,7 +37,7 @@
             $poc_phone = val(preg_replace("/[^0-9]/","", $_POST['poc_phone']));
             $addedby = $usrid;
 
-            $sql = 'INSERT INTO org (id, name, cat_id, url, avail, org.desc, poc_name, poc_title, poc_email, poc_phone, dt, addedby) VALUES (NULL, "'.nameize($name).'", '.$catid.', "'.$url.'", 1, "'.sentence_case($desc).'", "'.nameize($poc_name).'", "'.$poc_title.'", "'.$poc_email.'", "'.formatphone($poc_phone).'", now(), "'.$addedby.'")';
+            $sql = 'INSERT INTO org (id, name, cat_id, url, avail, org.desc, poc_name, poc_title, poc_email, poc_phone, dt, addedby) VALUES (NULL, "'.nameize($name).'", "'.$catid.'", "'.$url.'", 1, "'.sentence_case($desc).'", "'.nameize($poc_name).'", "'.$poc_title.'", "'.$poc_email.'", "'.formatphone($poc_phone).'", now(), "'.$addedby.'")';
             $res = mysql_query($sql);
 
             $_SESSION['msg']['success']='Sweet! New organization added!';
@@ -325,8 +327,8 @@
                                                     <input type="text" name="name" maxlength="100" class="span3">
                                                     <label class="span3">Category:</label>
                                                         <select name="catid">
-                                                            <option value ="" selected>Select Category:</option>
-                                                            <option value = ""></option>
+                                                            <option value ="0" selected>Select Category:</option>
+                                                            <option value = "0"></option>
                                                             <?php
                                                                 $sql = 'SELECT * FROM cat ORDER BY title ASC';
                                                                 $res = mysql_query($sql);
