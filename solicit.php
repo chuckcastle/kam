@@ -152,7 +152,7 @@
                             while($row = mysql_fetch_array($perres)){
                                 $total = $row['total'];
                                 //percentage of goal
-                                $percent = round(($total/$goal)*100);
+                                $percent = floor(($total/$goal)*100);
                             }
 
                             //format as currency
