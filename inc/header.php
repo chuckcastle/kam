@@ -154,12 +154,33 @@
                                                                 <label>Password</label>
                                                                 <input type="password" name="password" id="password" value="" maxlength="100" class="span3" />
                                                             </div>
+                                                            <div class="span3 control-group pull-right">
+                                                                <p><a href="#forgotpw" data-toggle="tab">Forgot Password?</a></p>
+                                                            </div>
                                                             <div class="span3 control-group">
                                                                 <input type="submit" name="submit" value="Login" class="btn btn-primary">
                                                             </div>
                                                         </div>
                                                     </form> <!-- /login form -->
                                                 </div> <!-- /login tab -->
+
+                                                <div class="tab-pane" id="forgotpw">
+                                                    <form action="" method="post">
+                                                        <div class="row controls">
+                                                            <div class="span3 control-group">
+                                                                <label>Username</label>
+                                                                <input type="text" name="username" id="username" value="" maxlength="100" class="span3" />
+                                                            </div>
+                                                            <div class="span3 control-group">
+                                                                <label>Email</label>
+                                                                <input type="text" name="email" id="email" value="" maxlength="100" class="span3" />
+                                                            </div>
+                                                            <div class="span3 control-group">
+                                                                <input type="submit" name="submit" value="Reset" class="btn btn-primary">
+                                                            </div>
+                                                        </div>
+                                                    </form> <!-- /reset form -->
+                                                </div> <!-- /forgotpw tab -->
 
                                                 <div class="tab-pane" id="register-tab">
                                                     <form action="" method="post">
@@ -312,6 +333,11 @@
                                 <ul class="dropdown-menu">
                                     <li><a href="admin.php#classrooms">Classrooms</a></li>
                                     <li><a href="admin.php#categories">Categories</a></li>
+                                    <?php
+                                        if($_SESSION['acc']==1){
+                                            echo '<li><a href="admin.php#bfg">BFG Export</a></li>';
+                                        }
+                                    ?>
                                 </ul>
                             </li>
                             <?php

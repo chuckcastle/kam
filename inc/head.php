@@ -164,4 +164,49 @@ else if($_POST['submit']=='Register')
     exit;
 }
 
+//forgotpw
+else if($_POST['submit']=='Reset')
+{
+    $err = array();
+
+    if(strlen($_POST['username'])<4 || strlen($_POST['username'])>12)
+    {
+        $err[]='Not so fast! Your username\'s gotta be between 4 and 12 characters!';
+    }
+
+    if(preg_match('/[^a-z0-9\-\_\.]+/i',$_POST['username']))
+    {
+        $err[]='Whoops! Your username contains invalid characters!';
+    }
+
+    if(!checkEmail($_POST['email']))
+    {
+        $err[]='Wait a minute... that\'s not a valid email address...';
+    }
+
+    if(!count($err))
+    {
+        if(isset($_POST['email'])) {
+            $randompw = $_POST['username'];
+            $hashedpw = md5($randompw);
+            $mailfrom = $_POST['email'];
+            $mailto = 'rosie.castillo@me.com';
+
+            send_mail(  $mailfrom,
+                        $mailto,
+                        'KAM Password Reset',
+                        'Hey Rosie, '.$_POST['username'].' has requested a password reset.'."\n\n".'The temporary password is: '.$randompw."\n".'The MD5 hash is: '.$hashedpw);
+
+            $_SESSION['msg']['success']='Password reset request sent!';
+        }
+        else $err[]='Aw snap! You entered a bad username and/or email :(';
+    }
+
+    if($err)
+    $_SESSION['msg']['error'] = implode('<br />',$err);
+
+    header("Location: index.php");
+    exit;
+}
+
 ?>

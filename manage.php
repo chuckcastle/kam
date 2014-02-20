@@ -110,10 +110,29 @@
             $assign = val($_POST['assign']);
         }
 
-        $sql = 'UPDATE members SET fname="'.nameize($fname).'", lname="'.nameize($lname).'", email="'.$email.'", acc="'.$acc.'", assign="'.$assign.'", class_id = "'.$class_id.'", class_id2 = "'.$class_id2.'", opt_out = "'.$opt_out.'" WHERE members.id='.$id.' LIMIT 1';
-        $res = mysql_query($sql);
+        mysql_query('UPDATE members SET fname="'.nameize($fname).'", lname="'.nameize($lname).'", email="'.$email.'", acc="'.$acc.'", assign="'.$assign.'", class_id = "'.$class_id.'", class_id2 = "'.$class_id2.'", opt_out = "'.$opt_out.'" WHERE members.id='.$id.' LIMIT 1');
+        $_SESSION['msg']['success']='Right on, user information successfully updated!';
 
-        $_SESSION['msg']['success']='Right on!  You just updated '.$user['usr'].'!';
+        if(strlen($_POST['newpw'])>0){
+            if(strlen($_POST['verpw'])<1){
+                $_SESSION['msg']['error']='Oops!  You didn\'t verify your new password!';
+            } else {
+                if(strlen($_POST['password'])<1){
+                    $_SESSION['msg']['error']='Uh oh, you didn\'t enter your current password.';
+                } else {
+                    if(md5($_POST['password'])==$user['pass']){
+                        if($_POST['verpw']==$_POST['newpw']){
+                            mysql_query('UPDATE members SET pass = "'.md5($_POST['verpw']).'" WHERE members.id = '.$id.' LIMIT 1');
+                            $_SESSION['msg']['success']='Woo hoo!  Your password was successfully updated!';
+                        } else {
+                            $_SESSION['msg']['error']='Uh oh, your passwords don\'t match.';
+                        }
+                    } else {
+                        $_SESSION['msg']['error']='Uh oh, you entered an invalid current password.';
+                    }
+                }
+            }
+        }
     }
 
     //if submit delusr
@@ -500,6 +519,12 @@
                                                                     <input type="text" name="lname" value="<?=$row['lname'];?>" maxlength="30" class="span3">
                                                                     <label class="span3">Email:</label>
                                                                     <input type="text" name="email" value="<?=$row['email'];?>" maxlength="30" class="span3">
+                                                                    <label class="span3">Current Password:</label>
+                                                                    <input type="password" name="password" value="" maxlength="30" class="span3">
+                                                                    <label class="span3">New Password:</label>
+                                                                    <input type="password" name="newpw" value="" maxlength="30" class="span3">
+                                                                    <label class="span3">Verify New Password:</label>
+                                                                    <input type="password" name="verpw" value="" maxlength="30" class="span3">
                                                                     <?php if($access == 1): ?>
                                                                     <label class="span3">Access Level:</label>
                                                                     <select name="acc">
@@ -533,7 +558,6 @@
                                                                     </select>
                                                                     <?php
                                                                         endif;
-                                                                        if($access <> 4):
                                                                     ?>
                                                                     <label class="span3">Classroom 1:</label>
                                                                     <select name="classid" class="span3">
@@ -567,17 +591,22 @@
                                                                             }
                                                                         ?>
                                                                     </select>
+                                                                    <?php
+                                                                        if($access <> 4):
+                                                                    ?>
                                                                     <label class="span3">Assignable?</label>
                                                                         <select name="assign"  class="span3">
                                                                             <option value="0"<? if($row['assign']==0){echo ' selected';}?>>No</option>
                                                                             <option value="1"<? if($row['assign']==1){echo ' selected';}?>>Yes</option>
                                                                         </select>
+                                                                    <?php
+                                                                        endif;
+                                                                    ?>
                                                                     <label class="span3">Receive Emails from KAM?</label>
                                                                         <select name="opt_out"  class="span3">
                                                                             <option value="0"<? if($row['opt_out']==0){echo ' selected';}?>>Yes</option>
                                                                             <option value="1"<? if($row['opt_out']==1){echo ' selected';}?>>No</option>
                                                                         </select>
-                                                                <?php endif; ?>
                                                             </div> <!-- /modal-body -->
 
                                                             <div class="modal-footer">

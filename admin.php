@@ -1,40 +1,40 @@
 <?php
 //smoke and mirrors
     include('inc/head.php');
-    
+
 // LOGIN/PAGE ACCESS CHECK
 
     //if not logged in
     if(!isset($_SESSION['id'])) {
         $_SESSION['msg']['error']='Uhm... you\'ve gotta be logged in to do that...';
-        
+
         header("Location: index.php");
         exit;
     }
-    
+
     //if access > 2
     if($_SESSION['acc'] > 2) {
         $_SESSION['msg']['error']='Sowwy... mommy and daddy don\'t want you to see that :(';
-        
+
         header("Location: index.php");
         exit;
     }
-        
+
 //set variables
     $orgid = $_GET['orgid'];
     $usrid = $_SESSION['id'];
     $usr = $_SESSION['usr'];
     $access = $_SESSION['acc'];
-    
+
 //POST
     //if submit updclass
     if($_POST['submit']=='Update') {
         $id = val($_POST['classid']);
-        
+
         $updqry = 'SELECT * FROM class WHERE id = '.$id.' LIMIT 1';
         $updres = mysql_query($updqry);
         $class = mysql_fetch_array($updres);
-        
+
         if(!isset($_POST['name'])){
             $name = $class['name'];
         } else {
@@ -55,33 +55,33 @@
         } else {
             $parent2 = val($_POST['parent2']);
         }
-   
+
         $sql = 'UPDATE class SET name="'.nameize($name).'", numkids='.$numkids.', parent1="'.$parent1.'", parent2="'.$parent2.'" WHERE class.id='.$id.' LIMIT 1';
         $res = mysql_query($sql);
-        
+
         $_SESSION['msg']['success']='Right on!  You successfully updated information for '.$class['name'].'!';
     }
-    
+
     //if submit updcat
     if($_POST['submit']=='Update Category') {
         $id = val($_POST['catid']);
-        
+
         $updqry = 'SELECT * FROM cat WHERE id = '.$id.' LIMIT 1';
         $updres = mysql_query($updqry);
         $cat = mysql_fetch_array($updres);
-        
+
         if(!isset($_POST['title'])){
             $title = $class['title'];
         } else {
             $title = val($_POST['title']);
         }
-   
+
         $sql = 'UPDATE cat SET title="'.$title.'" WHERE cat.id='.$id.' LIMIT 1';
         $res = mysql_query($sql);
-        
+
         $_SESSION['msg']['success']='Right on!  You successfully updated information for '.$cat['title'].'!';
     }
-    
+
     //if submit addcat
     if($_POST['submit']=='Add Category') {
         $title = val($_POST['title']);
@@ -92,27 +92,27 @@
             $res = mysql_query($sql);
         }
     }
-    
+
     //if submit delete
     if($_POST['submit']=='Delete') {
         $catid = val($_POST['catid']);
-        
+
         $sql = 'DELETE FROM cat WHERE cat.id = '.$catid.' LIMIT 1';
         $res = mysql_query($sql);
 
         $_SESSION['msg']['info']='Right on!  You successfully deleted the category!';
     }
-        
+
 //SQL
 
     //classroom data
     $classqry = 'SELECT * FROM class WHERE campus NOT LIKE 0 GROUP BY name ORDER BY name ASC';
     $classres = mysql_query($classqry);
-    
+
     //category data
     $catqry = 'SELECT * FROM cat ORDER BY title ASC';
     $catres = mysql_query($catqry);
-    
+
 //include html header
     include('inc/header.php');
 ?>
@@ -145,6 +145,11 @@
                                 <ul class="nav nav-tabs">
                                     <li class="active"><a href="#classrooms" data-toggle="tab"><i class="icon-group"></i> Classrooms (<?=mysql_num_rows($classres);?>)</a></li>
                                     <li><a href="#categories" data-toggle="tab"><i class="icon-folder-open"></i> Categories (<?=mysql_num_rows($catres);?>)</a></li>
+                                    <?php
+                                        if($access==1){
+                                            echo '<li><a href="#bfg" data-toggle="tab"><i class="icon-excel"></i> BFG (<?=mysql_num_rows($bfgres);?>)</a></li>';
+                                        }
+                                    ?>
                                 </ul>
                                 <div class="tab-content">
                                     <div class="tab-pane active" id="classrooms">
@@ -156,7 +161,7 @@
                                                 <th>Parent 2</th>
                                                 <th>Registered Accounts</th>
                                             </thead>
-                                            
+
                                             <tbody>
                                                 <?php
                                                     $a = 0;
@@ -168,11 +173,11 @@
                                                         $sql = 'SELECT class.id, class.name, members.fname, members.lname FROM members, class WHERE class.parent2 = members.id AND class.id = '.$row['id'].' LIMIT 1';
                                                         $res = mysql_query($sql);
                                                         $parent2 = mysql_fetch_array($res);
-                                                        
+
                                                         $regqry = 'SELECT usr FROM members WHERE fname <> "X" AND class_id = '.$row['id'].' OR class_id2 = '.$row['id'].' group by usr';
                                                         $regres = mysql_query($regqry);
                                                         $regnum = mysql_num_rows($regres);
-                                                        
+
                                                         echo '<tr>';
                                                         echo '    <td><a href="#editclass'.$a.'" data-toggle="modal">'.$row['name'].'</a></td>';
                                                         echo '    <td>'.$row['numkids'].'</td>';
@@ -189,7 +194,7 @@
                                                             </div> <!-- /modal-header -->
 
                                                             <div class="modal-body">
-                                                                <form action="" method="post">                                            
+                                                                <form action="" method="post">
                                                                     <label class="span3">Classroom:</label>
                                                                     <input type="text" name="name" value="<?=$row['name'];?>" maxlength="30" class="span3">
                                                                     <label class="span3">Number of Kids:</label>
@@ -197,10 +202,10 @@
                                                                     <label class="span3">Parent 1:</label>
                                                                     <select name="parent1" class="span3">
                                                                         <option value="0">Select user:</option>
-                                                                        <?php 
+                                                                        <?php
                                                                             $sql = 'SELECT id, fname, lname, class_id FROM members WHERE class_id = '.$row['id'].' AND sub <> 11 OR class_id2 = '.$row['id'].' AND sub <> 11 ORDER BY usr ASC';
                                                                             $res = mysql_query($sql);
-                                                                            while($sub = mysql_fetch_array($res)) { 
+                                                                            while($sub = mysql_fetch_array($res)) {
                                                                                 $p1 = '';
                                                                                 if($row['parent1'] == $sub['id']) {
                                                                                     $p1 = 'selected';
@@ -212,10 +217,10 @@
                                                                     <label class="span3">Parent 2:</label>
                                                                     <select name="parent2" class="span3">
                                                                         <option value="0">Select user:</option>
-                                                                        <?php 
+                                                                        <?php
                                                                             $sql = 'SELECT id, fname, lname, class_id FROM members WHERE class_id = '.$row['id'].' AND sub <> 11 OR class_id2 = '.$row['id'].' AND sub <> 11 ORDER BY usr ASC';
                                                                             $res = mysql_query($sql);
-                                                                            while($sub = mysql_fetch_array($res)) { 
+                                                                            while($sub = mysql_fetch_array($res)) {
                                                                                 $p2 = '';
                                                                                 if($row['parent2'] == $sub['id']) {
                                                                                     $p2 = 'selected';
@@ -224,14 +229,14 @@
                                                                             }
                                                                         ?>
                                                                     </select>
-                                                                    
+
                                                             </div> <!-- /modal-body -->
 
                                                             <div class="modal-footer">
                                                                     <input type="hidden" name="classid" value="<?=$row['id'];?>">
                                                                     <input type="submit" name="submit" value="Update" class="btn btn-primary">
                                                                     <?php
-                                                                        if($access == 1){ 
+                                                                        if($access == 1){
                                                                             echo '<input type="submit" name="submit" value="Delete" class="btn btn-danger">';
                                                                         }
                                                                     ?>
@@ -244,9 +249,9 @@
                                             </tbody>
                                         </table>
                                     </div> <!-- /tab-pane classrooms -->
-                                    
+
                                     <div class="tab-pane" id="categories">
-                                    
+
                                         <span class="pull-right"><a rel="tooltip" data-placement="top" href="#addcat" data-original-title="Add Category" data-toggle="modal"><i class="icon-plus"></i><span class="alternative-font">&nbsp;Add Category</span></a></span>
                                         <table class="table table-striped">
                                             <thead>
@@ -266,7 +271,7 @@
                                                         echo '    <td><a href="#editcat'.$b.'" data-toggle="modal">'.$row['title'].'</a></td>';
                                                         echo '    <td><a href="#orgsincat'.$b.'" data-toggle="modal">'.$mem.'</a></td>';
                                                         echo '</tr>';
-                                                ?>    
+                                                ?>
                                                     <!-- editcat modal -->
                                                         <div id="editcat<?=$b;?>" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="editcat<?=$b;?>Label" aria-hidden="true">
                                                             <div class="modal-header">
@@ -275,7 +280,7 @@
                                                             </div> <!-- /modal-header -->
 
                                                             <div class="modal-body">
-                                                                <form action="" method="post">                                            
+                                                                <form action="" method="post">
                                                                     <label class="span3">Category Title:</label>
                                                                     <input type="text" name="title" value="<?=$row['title'];?>" maxlength="50" class="span3">
                                                             </div> <!-- /modal-body -->
@@ -284,14 +289,14 @@
                                                                     <input type="hidden" name="catid" value="<?=$row['id'];?>">
                                                                     <input type="submit" name="submit" value="Update Category" class="btn btn-primary">
                                                                     <?php
-                                                                        if($access == 1){ 
+                                                                        if($access == 1){
                                                                             echo '<input type="submit" name="submit" value="Delete" class="btn btn-danger">';
                                                                         }
                                                                     ?>
                                                                 </form>
                                                             </div> <!-- /modal-footer -->
                                                         </div> <!-- /editcat -->
-                                                        
+
                                                     <!-- orgsincat modal -->
                                                         <div id="orgsincat<?=$b;?>" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="orgsincat<?=$b;?>Label" aria-hidden="true">
                                                             <div class="modal-header">
@@ -319,7 +324,81 @@
                                             </tbody>
                                         </table>
                                     </div> <!-- /tab-pane categories -->
-                                    
+
+                                    <div class="tab-pane" id="bfg">
+
+                                        <table class="table table-striped">
+                                            <thead>
+                                                <th>Category</th>
+                                                <th>Organizations</th>
+                                            </thead>
+
+                                            <tbody>
+                                                <?php
+                                                    $b = 0;
+                                                    while($row = mysql_fetch_array($catres)) {
+                                                        $b++;
+                                                        $sql = 'SELECT org.id AS orgid, cat_id, name FROM org LEFT JOIN cat ON org.cat_id = cat.id WHERE cat_id = '.$row['id'].' ORDER BY name ASC';
+                                                        $res = mysql_query($sql);
+                                                        $mem = mysql_num_rows($res);
+                                                        echo '<tr>';
+                                                        echo '    <td><a href="#editcat'.$b.'" data-toggle="modal">'.$row['title'].'</a></td>';
+                                                        echo '    <td><a href="#orgsincat'.$b.'" data-toggle="modal">'.$mem.'</a></td>';
+                                                        echo '</tr>';
+                                                ?>
+                                                    <!-- editcat modal -->
+                                                        <div id="editcat<?=$b;?>" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="editcat<?=$b;?>Label" aria-hidden="true">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                                <h3 id="editcat<?=$b;?>Label">Edit Details for: <?=$row['title'];?></h3>
+                                                            </div> <!-- /modal-header -->
+
+                                                            <div class="modal-body">
+                                                                <form action="" method="post">
+                                                                    <label class="span3">Category Title:</label>
+                                                                    <input type="text" name="title" value="<?=$row['title'];?>" maxlength="50" class="span3">
+                                                            </div> <!-- /modal-body -->
+
+                                                            <div class="modal-footer">
+                                                                    <input type="hidden" name="catid" value="<?=$row['id'];?>">
+                                                                    <input type="submit" name="submit" value="Update Category" class="btn btn-primary">
+                                                                    <?php
+                                                                        if($access == 1){
+                                                                            echo '<input type="submit" name="submit" value="Delete" class="btn btn-danger">';
+                                                                        }
+                                                                    ?>
+                                                                </form>
+                                                            </div> <!-- /modal-footer -->
+                                                        </div> <!-- /editcat -->
+
+                                                    <!-- orgsincat modal -->
+                                                        <div id="orgsincat<?=$b;?>" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="orgsincat<?=$b;?>Label" aria-hidden="true">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                                                                <h3 id="orgsincat<?=$b;?>Label">Organizations in: <?=$row['title'];?></h3>
+                                                            </div> <!-- /modal-header -->
+
+                                                            <div class="modal-body">
+                                                                <p>
+                                                                <?php
+                                                                    while($orgs = mysql_fetch_array($res)) {
+                                                                        echo '<a href="orginfo.php?orgid='.$orgs['orgid'].'">'.$orgs['name'].'</a><br />';
+                                                                    }
+                                                                ?>
+                                                                </p>
+                                                            </div> <!-- /modal-body -->
+
+                                                            <div class="modal-footer">
+
+                                                            </div> <!-- /modal-footer -->
+                                                        </div> <!-- /orgsincat -->
+                                                <?php
+                                                    }
+                                                ?>
+                                            </tbody>
+                                        </table>
+                                    </div> <!-- /tab-pane bfg -->
+
                                 </div> <!-- /tab-content -->
                             </div> <!-- /tabs -->
 
@@ -327,7 +406,7 @@
                     </div> <!-- /row -->
                 </div> <!-- /container -->
             </div> <!-- /main -->
-                
+
 <!-- addcat modal -->
 <div id="addcat" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="addcatLabel" aria-hidden="true">
     <div class="modal-header">
