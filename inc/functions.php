@@ -10,7 +10,7 @@ function checkEmail($str)
 
 function send_mail($from,$to,$subject,$body)
 {
-    $headers = '';
+    $headers  = '';
     $headers .= "From: $from\n";
     $headers .= "Reply-to: $from\n";
     $headers .= "Return-Path: $from\n";
@@ -25,28 +25,28 @@ function send_mail($from,$to,$subject,$body)
 function formatphone($num)
 {
 $num = preg_replace('/[^0-9]/', '', $num);
- 
+
 $len = strlen($num);
 if($len == 7)
 $num = preg_replace('/([0-9]{3})([0-9]{4})/', '$1-$2', $num);
 elseif($len == 10)
 $num = preg_replace('/([0-9]{3})([0-9]{3})([0-9]{4})/', '($1) $2-$3', $num);
- 
+
 return $num;
 }
 
-function sentence_case($string) { 
-    $sentences = preg_split('/([.?!]+)/', $string, -1, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE); 
-    $new_string = ''; 
-    foreach ($sentences as $key => $sentence) { 
-        $new_string .= ($key & 1) == 0? 
-            ucfirst(strtolower(trim($sentence))) : 
-            $sentence.' '; 
-    } 
-    return trim($new_string); 
-} 
+function sentence_case($string) {
+    $sentences = preg_split('/([.?!]+)/', $string, -1, PREG_SPLIT_NO_EMPTY|PREG_SPLIT_DELIM_CAPTURE);
+    $new_string = '';
+    foreach ($sentences as $key => $sentence) {
+        $new_string .= ($key & 1) == 0?
+            ucfirst(strtolower(trim($sentence))) :
+            $sentence.' ';
+    }
+    return trim($new_string);
+}
 
-function nameize($str,$a_char = array("'","-"," ")){    
+function nameize($str,$a_char = array("'","-"," ")){
     //$str contains the complete raw name string
     //$a_char is an array containing the characters we use as separators for capitalization. If you don't pass anything, there are three in there as default.
     $string = strtolower($str);
@@ -61,11 +61,11 @@ function nameize($str,$a_char = array("'","-"," ")){
                 $mend .= ucfirst($temp2).$temp;
                 }
             $string = substr($mend,0,-1);
-            }    
+            }
         }
     return ucfirst($string);
     }
-    
+
 function val($data)
 {
    $data = trim($data);
