@@ -47,7 +47,7 @@
                     'donotreply@krigercenter.org',
                     $email['email'],
                     'A donation has been received!',
-                    'Hey '.$email['fname'].','."\n\n".'A donation has been received for '.$email['name']."\n\n".'You can now login at http://auction.kriegercenter.org to check it out.'."\n\n".'--'."\n".'Please do not reply to this email.  If you do, a baby polar bear will slip on ice and the penguins will all point and laugh.'
+                    'Hey '.$email['fname'].','."\n\n".'A donation has been received for '.$email['name']."\n\n".'You can now login at http://auction.kriegercenter.org to check it out.'."\n\n".'--'."\n".'Please do not reply to this email.'
                 );
                 $msgsnt = 1;
             }
@@ -80,7 +80,7 @@
                     'donotreply@krigercenter.org',
                     $email['email'],
                     'A donation has been received!',
-                    'Hey '.$email['fname'].','."\n\n".'A donation has been received for '.$email['name']."\n\n".'You can now login at http://auction.kriegercenter.org to check it out.'."\n\n".'--'."\n".'Please do not reply to this email.  If you do, a baby polar bear will slip on ice and the penguins will all point and laugh.'
+                    'Hey '.$email['fname'].','."\n\n".'A donation has been received for '.$email['name']."\n\n".'You can now login at http://auction.kriegercenter.org to check it out.'."\n\n".'--'."\n".'Please do not reply to this email.'
                 );
                 mysql_query('UPDATE items SET msg_sent = "1" WHERE items.id = '.$_POST['itemid']);
             }

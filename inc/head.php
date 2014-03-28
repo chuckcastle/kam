@@ -148,7 +148,7 @@ else if($_POST['submit']=='Register')
             send_mail(    'donotreply@kriegercenter.org',
                         $_POST['email'],
                         'Welcome to the Krieger Auction Manager!',
-                        'Hey! Thanks for registering a new account.'."\n\n".'Your username is: '.$_POST['username']."\n".'Your password is: '.$_POST['vpass']."\n\n".'You can login at http://auction.kriegercenter.org'."\n\n".'--'."\n".'Please do not reply to this email.  If you do, a baby unicorn will fall from the sky and land on a baby seal.');
+                        'Hey! Thanks for registering a new account.'."\n\n".'Your username is: '.$_POST['username']."\n".'Your password is: '.$_POST['vpass']."\n\n".'You can login at http://auction.kriegercenter.org'."\n\n".'--'."\n".'Please do not reply to this email.');
 
             $_SESSION['msg']['success']='Welcome to KAM!  You may now log in.  Your account info has been emailed to you for safe keeping :)';
         }
