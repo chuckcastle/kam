@@ -50,4 +50,16 @@ function send_mail($from,$to,$subject,$body)
             $donothing = 1;
         }
     } */
+
+/*    //heartbleed update
+    $hbqry = 'SELECT fname, email FROM members WHERE email <> "" GROUP BY email';
+    $hbres = mysql_query($hbqry);
+    while($hb = mysql_fetch_array($hbres)) {
+        send_mail(  'donotereply@kriegercenter.org',
+                    $hb['email'],
+                    'Krieger Auction Manager Security Update',
+                    'Howdy '.$hb['fname'].','."\n".'You\'ve probably heard about that nasty Heartbleed bug that\'t been going around.  We just want to let you know that KAM is not vulnerable nor is it compromised by the bug!  Why?  Because KAM\' super awesome and built by ninjas!?  Sadly, no.  The reason your email and password are safe with KAM is much more anticlimactic: KAM doesn\'t use OpenSSL.'."\n\n".'We do, however, encourage you to read up on Heartbleed and familiarize yourself with what to do over the next couple weeks.  You can familiarize yourself with the bug via Mashable at http://mashable.com/2014/04/09/heartbleed-what-to-do/.  Of course, for the geekily inclined, TechCrunch has a good article (and video!) at http://techcrunch.com/2014/04/08/what-is-heartbleed-the-video/.'."\n\n".'Again, KAM is completely unaffected by the Heartbleed bug.  Thank you for your continued support as we draw closer to the April 23rd online auction and May 9th live auction!'
+        );
+        echo 'Mail sent to '.$hb['email'].'<br />';
+    } */
 ?>
