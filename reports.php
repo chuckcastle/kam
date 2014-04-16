@@ -102,13 +102,21 @@
                             $totsol = number_format($totsol, 2, '.', ',');
                             $totrcv = number_format($totrcv, 2, '.', ',');
                             $goal = number_format($goal, 2, '.', ',');
+
                         ?>
                             <div class="progress-label">
                                 <span>Solicitation Progress:</span>
                             </div>
 
                             <div class="progress progress-striped active">
-                                <div class="bar" data-appear-progress-animation="<?php echo $persol; ?>%" style="width: <?php echo $persol; ?>%;">
+                                <?php
+                                    if($persol>100){
+                                        $pwidth = 100;
+                                    } else {
+                                        $pwidth = $persol;
+                                    }
+                                ?>
+                                <div class="bar" data-appear-progress-animation="<?php echo $persol; ?>%" style="width: <?php echo $pwidth; ?>%;">
                                     <span class="pull-right"><?php echo $persol; ?>%</span>
                                 </div>
                             </div>

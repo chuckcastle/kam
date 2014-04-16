@@ -62,4 +62,15 @@ function send_mail($from,$to,$subject,$body)
         );
         echo 'Mail sent to '.$hb['email'].'<br />';
     } */
+
+    //eom thank yous
+    $tyqry = 'SELECT org.poc_name, org.poc_email, org.name, members.fname, members.lname, items.desc FROM org JOIN members ON members.id = org.usr_id JOIN items ON items.org_id = org.id';
+    $tyres = mysql_query($tyqry);
+    while($ty = mysql_fetch_array($tyres)){
+        echo 'Send email to: '.$ty['poc_email'].'<br />';
+        echo 'Hey '.$ty['poc_name'].', <br />';
+        echo 'Thank you so much for '.$ty['name'].'\'s donation of '.$ty['desc'].'.  Because of your generosity, '.$ty['fname'].' '.$ty['lname'].' was able to make a significant contribution to our school!<br />';
+        echo '<br />We look forward to your participation next year :)<br>';
+        echo '<br />Sincerely,<br>Krieger<br /><br />';
+    }
 ?>
