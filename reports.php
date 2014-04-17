@@ -146,9 +146,15 @@
                                     <li class="active"><a href="#classldr" data-toggle="tab"><i class="icon-group"></i> Classroom Leaderboard (<?php echo mysql_num_rows($clsldrres);?>)</a></li>
                                     <li><a href="#parentldr" data-toggle="tab"><i class="icon-user"></i> Parent Leaderboard (<?php echo mysql_num_rows($prtldrres);?>)</a></li>
                                     <?php
-                                        if($access < 3){
+                                        if($access > 2){
+                                            $rcvqry = 'SELECT items.org_id, items.desc, items.value, items.location, items.itemnum, org.id, org.name, org.usr_id FROM items INNER JOIN org ON items.org_id=org.id WHERE received = 1 AND org.usr_id = '.$usrid.' ORDER BY items.itemnum ASC';
+                                            $rcvres = mysql_query($rcvqry);
+                                        }
                                     ?>
                                     <li><a href="#itemsrcv" data-toggle="tab"><i class="icon-tags"></i> Items Received (<?php echo mysql_num_rows($rcvres);?>)</a></li>
+                                    <?php
+                                        if($access < 3){
+                                    ?>
                                     <li><a href="#donateyes" data-toggle="tab"><i class="icon-thumbs-up"></i> Will Donate (<?php echo mysql_num_rows($yesres);?>)</a></li>
                                     <li><a href="#donateno" data-toggle="tab"><i class="icon-thumbs-down"></i> Will Not Donate (<?php echo mysql_num_rows($nores);?>)</a></li>
                                     <?php
@@ -223,9 +229,7 @@
                                             </tbody>
                                         </table>
                                     </div> <!-- /tab-pane parentldr -->
-                                    <?php
-                                        if($access < 3){
-                                    ?>
+
                                     <div class="tab-pane" id="itemsrcv">
                                         <table class="table table-striped">
                                             <thead>
@@ -252,7 +256,9 @@
                                             </tbody>
                                         </table>
                                     </div> <!-- /tab-pane itemsrcv -->
-
+                                    <?php
+                                        if($access < 3){
+                                    ?>
                                     <div class="tab-pane" id="donateyes">
                                         <table class="table table-striped">
                                             <thead>
