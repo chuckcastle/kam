@@ -76,6 +76,7 @@ function send_mail($from,$to,$subject,$body)
     }
 */
 
+/*
 //email home stretch!
     $prtldrqry = 'SELECT members.opt_out, members.fname, members.lname, members.email, SUM(items.value) AS total FROM org JOIN members ON org.usr_id = members.id JOIN items ON items.org_id = org.id WHERE members.opt_out = "0" GROUP BY members.usr ORDER BY total DESC';
     $prtldrres = mysql_query($prtldrqry);
@@ -86,4 +87,5 @@ function send_mail($from,$to,$subject,$body)
         'Krieger Auction Manager - We\'re on the home stretch!',
         'Hey '.$ldr['fname'].','."\n".'Guess what!?  Because of your hard work we have exceeded our initial goal of $40,000!!!  You helped us raise $'.$ldr['total'].' towards this goal with your awesomeness!'."\n\n".'There\'s still time to get those last minute solicitations in.  C\'mon, you know you wanna help make this record-breaking solicitation year the bestest ever!  One more solicitation!  One more solicitation!  One more solicitation!'."\n\n".'--'."\n".'We\'re so excited that we don\'t mind if you reply to this email... do it... you know you wanna...');
     }
+*/
 ?>
