@@ -63,6 +63,7 @@ function send_mail($from,$to,$subject,$body)
         echo 'Mail sent to '.$hb['email'].'<br />';
     } */
 
+/*
     //eom thank yous
     $tyqry = 'SELECT org.poc_name, org.poc_email, org.name, members.fname, members.lname, items.desc FROM org JOIN members ON members.id = org.usr_id JOIN items ON items.org_id = org.id';
     $tyres = mysql_query($tyqry);
@@ -72,5 +73,17 @@ function send_mail($from,$to,$subject,$body)
         echo 'Thank you so much for '.$ty['name'].'\'s donation of '.$ty['desc'].'.  Because of your generosity, '.$ty['fname'].' '.$ty['lname'].' was able to make a significant contribution to our school!<br />';
         echo '<br />We look forward to your participation next year :)<br>';
         echo '<br />Sincerely,<br>Krieger<br /><br />';
+    }
+*/
+
+//email home stretch!
+    $prtldrqry = 'SELECT members.opt_out, members.fname, members.lname, members.email, SUM(items.value) AS total FROM org JOIN members ON org.usr_id = members.id JOIN items ON items.org_id = org.id WHERE members.opt_out = "0" GROUP BY members.usr ORDER BY total DESC';
+    $prtldrres = mysql_query($prtldrqry);
+
+    while($ldr = mysql_fetch_array($prtldrres)){
+        send_mail(    'donotreply@kriegercenter.org',
+        $ldr['email'],
+        'Krieger Auction Manager - We\'re on the home stretch!',
+        'Hey '.$ldr['fname'].','."\n".'Guess what!?  Because of your hard work we have exceeded our initial goal of $40,000!!!  You helped us raise $'.$ldr['total'].' towards this goal with your awesomeness!'."\n\n".'There\'s still time to get those last minute solicitations in.  C\'mon, you know you wanna help make this record-breaking solicitation year the bestest ever!  One more solicitation!  One more solicitation!  One more solicitation!'."\n\n".'--'."\n".'We\'re so excited that we don\'t mind if you reply to this email... do it... you know you wanna...');
     }
 ?>
