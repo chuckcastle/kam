@@ -40,7 +40,7 @@
         send_mail(    'donotreply@kriegercenter.org',
         $_POST['email'],
         'Krieger Auction info for '.$name,
-        'Hey there!'."\n\n".$_SESSION['usr'].' over at the Krieger Auction site wanted you to have this info on '.$name.'.'."\n\n".$_POST['comment']."\n\n".'Point of contact: '.$poc_name.', '.$poc_title."\n".'Phone number: '.$poc_phone."\n".'Email: '.$poc_email."\n\n".'And, a little something about them: '."\n".$desc."\n\n\n".'--'."\n".'Please do not reply to this email. If you do a baby elephant will trip over his trunk and fall into a mud hole, and the other animals will laugh; please don\'t make animals laugh at a baby elephant.');
+        'Hey there!'."\n\n".$_SESSION['usr'].' over at the Krieger Auction site wanted you to have this info on '.$name.'.'."\n\n".$_POST['comment']."\n\n".'Point of contact: '.$poc_name.', '.$poc_title."\n".'Phone number: '.$poc_phone."\n".'Email: '.$poc_email."\n\n".'And, a little something about them: '."\n".$desc."\n\n\n".'--'."\n".'Please do not reply to this email.');
 
         $_SESSION['msg']['success']='Right on!  You successfully shared information on '.$name.' with '.$_POST['email'].'!';
     }
@@ -64,7 +64,7 @@
             send_mail(    'donotreply@kriegercenter.org',
             $data['email'],
             'Krieger Auction info for '.$name,
-            'Hey '.$data['fname'].','."\n\n".$_SESSION['usr'].' over at the Krieger Auction Manager just assigned '.$name.' to you!  This is the POC info we have so far:'."\n\n".'Point of contact: '.$poc_name.', '.$poc_title."\n".'Phone number: '.$poc_phone."\n".'Email: '.$poc_email."\n\n".'And, a little something about them: '."\n".$desc."\n\n".'You can log in at http://auction.kriegercenter.org and check out the "My Assignments" tab under the "Manage" menu.'."\n\n\n".'--'."\n".'Please do not reply to this email. If you do a baby elephant will trip over his trunk and fall into a mud hole, and the other animals will laugh; please don\'t make animals laugh at a baby elephant.');
+            'Hey '.$data['fname'].','."\n\n".$_SESSION['usr'].' over at the Krieger Auction Manager just assigned '.$name.' to you!  This is the POC info we have so far:'."\n\n".'Point of contact: '.$poc_name.', '.$poc_title."\n".'Phone number: '.$poc_phone."\n".'Email: '.$poc_email."\n\n".'And, a little something about them: '."\n".$desc."\n\n".'You can log in at http://auction.kriegercenter.org and check out the "My Assignments" tab under the "Manage" menu.'."\n\n\n".'--'."\n".'Please do not reply to this email.');
         }
 
         $_SESSION['msg']['success']='Woo hoo! You just updated the user assignment for '.$name.'!';
