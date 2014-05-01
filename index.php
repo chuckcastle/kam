@@ -25,7 +25,7 @@
                         </div> <!-- /row -->
                         <div class="row">
                             <div class="span12">
-                                <h2>Krieger Auction Manager    </h2>
+                                <h2>Krieger Auction Manager</h2>
                             </div> <!-- /span12 -->
                         </div> <!-- /row -->
                     </div> <!-- /container -->
@@ -33,7 +33,7 @@
 
                 <div class="home-concept">
                     <div class="container">
-                            <div class="span12">
+                            <div class="row">
                                 <h2 class="short">
                                     Welcome to the Krieger Auction Manager website
                                 </h2>
@@ -46,7 +46,7 @@
                                     The auction is now live at <a href="http://biddingforgood.com/krieger">Bidding For Good</a>.  Good luck and happy bidding!
                                 </p>
                             </div>
-                            <div class="span12">
+                            <div class="row">
                             <h2>Our <b>Features</b></h2>
                                 <div class="row">
                                     <div class="span6">
@@ -94,9 +94,9 @@
                             <?php
                                 if(!isset($_SESSION['acc'])){
                                     echo '<div class="row">';
-                                    echo '  <div class="span12">';
-                                    echo '      <p>Ready to get started?  Click <a href="#login" data-toggle="modal"><span class="alternative-font">Login</span></a> to register an account!</p>';
-                                    echo '  </div>';
+                                    echo '<div class="span12">';
+                                    echo '<p>Ready to get started?  Click <a href="#login" data-toggle="modal"><span class="alternative-font">Login</span></a> to register an account!</p>';
+                                    echo '</div>';
                                     echo '</div>';
                                 }
                             ?>
