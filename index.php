@@ -1,19 +1,19 @@
 <?php
 //smoke and mirrors
     include('inc/head.php');
-    
+
 //set access level
     if(!isset($_SESSION['acc'])) {
         $access = 5;
     } else {
         $access = $_SESSION['acc'];
-    } 
-  
+    }
+
 //include html header
     include('inc/header.php');
 ?>
             <div role="main" class="main">
-            
+
                 <section class="page-top">
                     <div class="container">
                         <div class="row">
@@ -37,9 +37,13 @@
                                 <h2 class="short">
                                     Welcome to the Krieger Auction Manager website
                                 </h2>
-                                <p class="featured lead">
-                                    The Spring Auction starts on <span class="alternative-font" data-appear-animation="tada">April 23, 2014</span>.  
+                                <!-- <p class="featured lead">
+                                    The Spring Auction starts on <span class="alternative-font" data-appear-animation="tada">April 23, 2014</span>.
                                     To reach our goal of raising <b>$20,000</b> for the center, we need to bring in <b>$40,000</b> worth of donations.
+                                </p> -->
+                                <p class="featured lead">
+                                    You guys totally <span class="alternative-font" data-appear-animation="tada">rock!</span>  Thanks to you, we exceeded our <b>$40,000</b> solicitation goal!
+                                    The auction is now live at <a href="http://biddingforgood.com/krieger">Bidding For Good</a>.  Good luck and happy bidding!
                                 </p>
                             </div>
                             <div class="span12">
@@ -90,9 +94,9 @@
                             <?php
                                 if(!isset($_SESSION['acc'])){
                                     echo '<div class="row">';
-                                    echo '<div class="span12">';
-                                    echo '<p>Ready to get started?  Click <a href="#login" data-toggle="modal"><span class="alternative-font">Login</span></a> to register an account!</p>';
-                                    echo '</div>';
+                                    echo '  <div class="span12">';
+                                    echo '      <p>Ready to get started?  Click <a href="#login" data-toggle="modal"><span class="alternative-font">Login</span></a> to register an account!</p>';
+                                    echo '  </div>';
                                     echo '</div>';
                                 }
                             ?>
